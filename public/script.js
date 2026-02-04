@@ -1,5 +1,5 @@
 // CONFIGURAÇÃO DA LOJA
-const WHATSAPP_LOJA = "5511999999999";
+const WHATSAPP_LOJA = "11991084308";
 
 // CONFIGURAÇÃO DO EMAILJS
 const EMAILJS_CONFIG = {
@@ -641,7 +641,7 @@ function showOrderConfirmation(customer, total, items) {
 }
 
 function montarMensagemWhatsApp(customer, total, items) {
-    let message = `🍫 *NOVO PEDIDO - BRIGADERIA DELÍCIA*\n\n`;
+    let message = `🍫 *NOVO PEDIDO - Pedaço do Céu*\n\n`;
     message += `👤 *DADOS DO CLIENTE*\n`;
     message += `Nome: ${customer.name}\n`;
     message += `E-mail: ${customer.email}\n`;
