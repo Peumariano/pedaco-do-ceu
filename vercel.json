@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "brigaderia-delicia",
   "builds": [
     {
       "src": "public/**",
@@ -11,18 +10,18 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     },
     {
-      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|webp|ico))",
-      "dest": "/public/$1"
+      "source": "/(.*\\.(?:css|js|png|jpg|jpeg|gif|svg|webp|ico))",
+      "destination": "/public/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/public/$1"
+      "source": "/((?!api/).*)",
+      "destination": "/public/$1"
     }
   ],
   "headers": [
