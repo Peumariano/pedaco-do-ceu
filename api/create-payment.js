@@ -58,7 +58,7 @@ module.exports = async (req, res) => {
         // Criar pagamento Pix
         const paymentData = {
             transaction_amount: parseFloat(amount),
-            description: description || 'Pedido Brigaderia Delícia',
+            description: description || 'Pedido Pedaço do Céu',
             payment_method_id: 'pix',
             payer: {
                 email: customer.email,
@@ -74,7 +74,7 @@ module.exports = async (req, res) => {
                 customer_phone: customer.phone || '',
                 items: JSON.stringify(items || [])
             },
-            notification_url: `${process.env.VERCEL_URL || 'https://seu-projeto.vercel.app'}/api/webhook`
+            notification_url: `${process.env.VERCEL_URL || 'https://pedaco-do-ceu-app.vercel.app/'}/api/webhook`
         };
 
         console.log('💳 Criando pagamento no Mercado Pago...');

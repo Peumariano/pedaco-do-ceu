@@ -767,7 +767,7 @@ function enviarEmailConfirmacao(customer, total, items) {
 // ============================================
 
 // CONFIGURAÇÃO
-const API_URL = 'https://appbrigadeiro.pages.dev/'; // Altere para URL de produção quando publicar
+const API_URL = ''; 
 
 // ============================================
 // FUNÇÃO: CRIAR PAGAMENTO PIX
