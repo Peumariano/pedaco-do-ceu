@@ -19,8 +19,6 @@
       "src": "/(.*)",
       "dest": "/public/$1"
     }
-  ],
-  "env": {
-    "MERCADOPAGO_ACCESS_TOKEN": "@mercadopago_access_token"
-  }
+  ]
+
 }
