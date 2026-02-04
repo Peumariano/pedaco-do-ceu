@@ -1,7 +1,5 @@
 // Detecta automaticamente se é local ou produção
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000'  // Desenvolvimento local
-    : 'https://pedaco-do-ceu-app.vercel.app/';  // Produção - usa a mesma URL (Vercel)
+const API_URL = '';
 
 // Função para criar pagamento
 async function criarPagamentoPix(customer, items, total) {
