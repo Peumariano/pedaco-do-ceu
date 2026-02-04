@@ -1,13 +1,14 @@
 {
   "version": 2,
+  "name": "brigaderia-delicia",
   "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    },
     {
       "src": "public/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -16,12 +17,31 @@
       "dest": "/api/$1"
     },
     {
-      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|eot))",
+      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|webp|ico))",
       "dest": "/public/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/public/index.html"
+      "dest": "/public/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
     }
   ]
 }
