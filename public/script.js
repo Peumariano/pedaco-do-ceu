@@ -807,7 +807,7 @@ async function criarPagamentoPix(customer, items, total) {
         console.log('Enviando dados:', paymentData);
 
         // Faz requisição para o backend
-        const response = await fetch(`${API_URL}/api/create-payment`, {
+        const response = await fetch(`${API_URL}/api/create-payment-debug`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
