@@ -56,7 +56,7 @@ const products = [
         category: "especial",
         description: "Sabor de paçoca em formato de brigadeiro",
         price: 3.50,
-        image: "public/assets/brigadeiro-pacoca.png"
+        image: "assets/brigadeiro-pacoca.png"
     },
     {
         id: 7,
@@ -64,7 +64,7 @@ const products = [
         category: "especial",
         description: "Refrescante brigadeiro de limão",
         price: 3.50,
-        image: "public/assets/brigadeiro-limao.png"
+        image: "assets/brigadeiro-limao.png"
     },
     {
         id: 8,
