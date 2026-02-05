@@ -16,7 +16,7 @@ const products = [
         category: "tradicional",
         description: "O clássico brigadeiro de chocolate granulado",
         price: 3.50,
-        image: "../public/assets/brigadeiro-tradicional.png"
+        image: "assets/brigadeiro-tradicional.png"
     },
     {
         id: 2,
@@ -24,7 +24,7 @@ const products = [
         category: "tradicional",
         description: "Brigadeiro com sabor de prestigio",
         price: 3.50,
-        image: "../public/assets/brigadeiro-beijinho.png"
+        image: "assets/brigadeiro-beijinho.png"
     },
     {
         id: 3,
@@ -32,7 +32,7 @@ const products = [
         category: "tradicional",
         description: "Feito com leite ninho original e cobertura especial",
         price: 3.50,
-        image: "../public/assets/brigadeiro-ninho.png"
+        image: "assets/brigadeiro-ninho.png"
     },
     {
         id: 4,
@@ -40,7 +40,7 @@ const products = [
         category: "tradicional",
         description: "Brigadeiro com sabor de coco queimado",
         price: 3.50,
-        image: "../public/assets/brigadeiro-coco-queimado.png"
+        image: "assets/brigadeiro-coco-queimado.png"
     },
     {
         id: 5,
@@ -48,7 +48,7 @@ const products = [
         category: "especial",
         description: "Sabor sofisticado de morango nesquik",
         price: 3.50,
-        image: "../public/assets/brigadeiro-morango.png"
+        image: "assets/brigadeiro-morango.png"
     },
     {
         id: 6,
@@ -56,7 +56,7 @@ const products = [
         category: "especial",
         description: "Sabor de paçoca em formato de brigadeiro",
         price: 3.50,
-        image: "../public/assets/brigadeiro-pacoca.png"
+        image: "public/assets/brigadeiro-pacoca.png"
     },
     {
         id: 7,
@@ -64,7 +64,7 @@ const products = [
         category: "especial",
         description: "Refrescante brigadeiro de limão",
         price: 3.50,
-        image: "../public/assets/brigadeiro-limao.png"
+        image: "public/assets/brigadeiro-limao.png"
     },
     {
         id: 8,
@@ -72,7 +72,7 @@ const products = [
         category: "especial",
         description: "Massa cremosa de amendoim",
         price: 3.50,
-        image: "../public/assets/brigadeiro-amendoim.png"
+        image: "assets/brigadeiro-amendoim.png"
     },
     {
         id: 9,
@@ -80,7 +80,7 @@ const products = [
         category: "diferente",
         description: "Cremoso brigadeiro tradicional com amendoim",
         price: 3.50,
-        image: "../public/assets/brigadeiro-charge.png"
+        image: "assets/brigadeiro-charge.png"
     },
     {
         id: 10,
@@ -88,7 +88,7 @@ const products = [
         category: "diferente",
         description: "Brigadeiro branco com pedaços de Oreo",
         price: 5.50,
-        image: "../public/assets/brigadeiro-oreo.png"
+        image: "assets/brigadeiro-oreo.png"
     },
     {
         id: 11,
@@ -96,7 +96,7 @@ const products = [
         category: "diferente",
         description: "Cremoso brigadeiro preto e ninho",
         price: 3.50,
-        image: "../public/assets/brigadeiro-casadinho.png"
+        image: "assets/brigadeiro-casadinho.png"
     },
     {
         id: 12,
@@ -104,7 +104,7 @@ const products = [
         category: "diferente",
         description: "Brigadeiro cremoso com sabor M&M",
         price: 3.50,
-        image: "../public/assets/brigadeiro-M&M.png"
+        image: "assets/brigadeiro-M&M.png"
     },
 
     {
@@ -113,7 +113,7 @@ const products = [
         category: "Caixas",
         description: "Brigadeiros personalizados",
         price: 14.00,
-        image: "../public/assets/caixa-brigadeiro.png"
+        image: "assets/caixa-brigadeiro.png"
     }
   
 ];
@@ -807,7 +807,7 @@ async function criarPagamentoPix(customer, items, total) {
         console.log('Enviando dados:', paymentData);
 
         // Faz requisição para o backend
-        const response = await fetch(`${API_URL}/api/create-payment-debug`, {
+        const response = await fetch(`${API_URL}/api/create-payment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
