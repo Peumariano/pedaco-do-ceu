@@ -20,7 +20,7 @@
             </a>
             <div class="cart-icon" onclick="toggleCart()">
                 <span class="cart-count">0</span>
-                🛒 Carrinho
+                Ver sacola
             </div>
         </div>
     </header>
@@ -46,11 +46,11 @@
     <!-- Carrinho Lateral -->
     <div id="cart-sidebar" class="cart-sidebar">
         <div class="cart-header">
-            <h2>Seu Carrinho</h2>
+            <h2>Sua sacola</h2>
             <button class="close-cart" onclick="toggleCart()">✕</button>
         </div>
         <div id="cart-items" class="cart-items">
-            <p class="empty-cart">Seu carrinho está vazio</p>
+            <p class="empty-cart">Sua sacola está vazia</p>
         </div>
         <div class="cart-footer">
             <div class="cart-total">
@@ -187,17 +187,13 @@
         </div>
     </div>
 
-    <!-- SCRIPTS - ORDEM E LÓGICA IDÊNTICAS AO DIAGNÓSTICO QUE FUNCIONOU -->
-    
-    <!-- 1. Carrega EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
-    <!-- 2. Inicializa EmailJS (IGUAL ao diagnóstico) -->
     <script>
         console.log('📦 EmailJS carregado');
         window.emailJsReady = false;
         
-        // Função de inicialização (IGUAL ao diagnóstico)
+
         const tentarInicializar = function() {
             if (typeof emailjs !== 'undefined') {
                 try {
@@ -212,11 +208,10 @@
             }
         };
         
-        // Inicia tentativas
+
         tentarInicializar();
     </script>
     
-    <!-- 3. Carrega script principal -->
     <script src="script.js"></script>
 </body>
 </html>

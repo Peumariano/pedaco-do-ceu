@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Grandstander:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -5,7 +7,7 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Grandstander", cursive;    
     background: linear-gradient(135deg, #ffeef8 0%, #fff5e6 100%);
     min-height: 100vh;
 }
@@ -18,13 +20,17 @@ body {
 
 /* Header */
 header {
-    background: linear-gradient(135deg, #8b4513 0%, #5c2e0a 100%);
-    color: white;
+    background: linear-gradient(135deg, #62001f 0%, #62001fc3 100%);
+    color: rgb(255, 255, 255);
     padding: 20px 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 100;
+    font-family: "Grandstander", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
 }
 
 header .container {
@@ -38,7 +44,7 @@ header .container {
     align-items: center;
     gap: 15px;
     text-decoration: none;
-    color: white;
+    color: rgb(255, 255, 255);
     transition: opacity 0.3s;
 }
 
@@ -100,7 +106,7 @@ header .container {
 
 /* Filtros */
 .filters {
-    background: white;
+    background: #ffd5b53a;
     padding: 20px 0;
     margin: 20px 0;
     border-radius: 10px;
@@ -115,10 +121,11 @@ header .container {
 }
 
 .filter-btn {
+    font-family: "Grandstander", cursive;    
     padding: 10px 24px;
-    border: 2px solid #8b4513;
+    border: 2px solid #62001f;
     background: white;
-    color: #8b4513;
+    color: #62001f;
     border-radius: 25px;
     cursor: pointer;
     font-size: 16px;
@@ -127,12 +134,12 @@ header .container {
 }
 
 .filter-btn:hover {
-    background: #8b4513;
+    background: #62001f;
     color: white;
 }
 
 .filter-btn.active {
-    background: #8b4513;
+    background: #62001f;
     color: white;
 }
 
@@ -184,7 +191,7 @@ header .container {
 
 .product-category {
     font-size: 12px;
-    color: #8b4513;
+    color: #62001f;
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 1px;
@@ -214,11 +221,11 @@ header .container {
 .product-price {
     font-size: 24px;
     font-weight: bold;
-    color: #8b4513;
+    color: #62001f;
 }
 
 .add-to-cart-btn {
-    background: #8b4513;
+    background: #62001f;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -230,7 +237,9 @@ header .container {
 }
 
 .add-to-cart-btn:hover {
-    background: #5c2e0a;
+    background: #fff;
+    color: #62001f;
+    border: 1px solid #62001f;
     transform: scale(1.05);
 }
 
@@ -255,7 +264,7 @@ header .container {
 
 .cart-header {
     padding: 20px;
-    background: #8b4513;
+    background: #62001f;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -367,6 +376,7 @@ header .container {
 }
 
 .checkout-btn {
+    font-family: "Grandstander", cursive;    
     width: 100%;
     background: #27ae60;
     color: white;
