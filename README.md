@@ -306,10 +306,10 @@ vercel --prod
 <div align="center">
 
 ### 🏠 Página Inicial
-![Homepage](assets/screenshots-home.png)
+![Homepage](./public/assets/screenshots-home.png)
 
 ### 🛒 Carrinho de Compras
-![Cart](asssets/screenshots-carrinho.png)
+![Cart](./public/assets/screenshots-carrinho.png)
 
 </div>
 
