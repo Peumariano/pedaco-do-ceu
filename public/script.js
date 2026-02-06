@@ -62,7 +62,7 @@ const products = [
         id: 7,
         name: "Brigadeiro de Limão",
         category: "especial",
-        description: "Refrescante brigadeiro de limão",
+        description: "Refrescante brigadeiro de limão, feito com a própria fruta",
         price: 3.50,
         image: "assets/brigadeiro-limao.png"
     },
@@ -76,7 +76,7 @@ const products = [
     },
     {
         id: 9,
-        name: "Brigadeiro Charge",
+        name: "Brigadeiro Ferrero Rocher",
         category: "diferente",
         description: "Cremoso brigadeiro tradicional com amendoim",
         price: 3.50,
@@ -86,7 +86,7 @@ const products = [
         id: 10,
         name: "Brigadeiro de Oreo",
         category: "diferente",
-        description: "Brigadeiro branco com pedaços de Oreo",
+        description: "Brigadeiro com pedaços de Oreo",
         price: 5.50,
         image: "assets/brigadeiro-oreo.png"
     },
@@ -102,7 +102,7 @@ const products = [
         id: 12,
         name: "Brigadeiro M&M",
         category: "diferente",
-        description: "Brigadeiro cremoso com sabor M&M",
+        description: "Brigadeiro tradicional com M&M",
         price: 3.50,
         image: "assets/brigadeiro-M&M.png"
     },
