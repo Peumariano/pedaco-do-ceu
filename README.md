@@ -9,7 +9,7 @@
 [![Node](https://img.shields.io/badge/node-%3E%3D%2018.0.0-brightgreen.svg)](https://nodejs.org/)
 [![Vercel](https://img.shields.io/badge/deploy-vercel-black.svg)](https://vercel.com)
 
-**[🔗 Ver Demo](https://pedaco-do-ceu-app.vercel.app/)** • **[📖 Documentação](#-funcionalidades)** • **[🚀 Como Usar](#️-como-executar)**
+**[🔗 Abrir site](https://pedaco-do-ceu-app.vercel.app/)** • **[📖 Documentação](#-funcionalidades)** • **[🚀 Como Usar](#️-como-executar)**
 
 </div>
 
