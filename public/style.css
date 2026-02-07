@@ -323,7 +323,7 @@ header .container {
 }
 
 .cart-item-price {
-    color: #8b4513;
+    color: #62001f;
     font-weight: 600;
 }
 
@@ -439,7 +439,7 @@ header .container {
 }
 
 .checkout-header {
-    background: #8b4513;
+    background: #62001f;
     color: white;
     padding: 20px 30px;
     display: flex;
@@ -503,8 +503,8 @@ header .container {
     font-size: 20px;
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 2px solid #8b4513;
-    color: #8b4513;
+    border-top: 2px solid #62001f;
+    color: #62001f;
 }
 
 /* Formulário */
@@ -541,7 +541,7 @@ header .container {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #8b4513;
+    border-color: #62001f;
 }
 
 .form-group textarea {
