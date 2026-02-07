@@ -156,7 +156,7 @@ function addToCart(productId) {
     }
     
     updateCart();
-    showNotification('Produto adicionado ao carrinho!');
+    showNotification('Produto adicionado a sacola!');
 }
 
 function updateCart() {
@@ -168,7 +168,7 @@ function updateCart() {
     cartCount.textContent = totalItems;
 
     if (!cartItems || !cartCount || !cartTotal) {
-        console.error('Elementos do carrinho não encontrados');
+        console.error('Elementos da sacola não encontrados');
         return;
     }
     
@@ -246,7 +246,7 @@ function filterProducts(category, element) {
 
 function checkout() {
     if (cart.length === 0) {
-        alert('Seu carrinho está vazio!');
+        alert('Sua sacola está vazia!');
         return;
     }
     
@@ -465,9 +465,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const metodoPagamento = await escolherMetodoPagamento();
     
     if (metodoPagamento === 'pix') {
-        // ========================================
-        // PAGAMENTO VIA PIX (MERCADO PAGO)
-        // ========================================
         
         showNotification('💳 Processando pagamento...');
         
