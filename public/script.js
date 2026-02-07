@@ -555,14 +555,14 @@ function escolherMetodoPagamento() {
                 padding: 40px;
                 text-align: center;
             ">
-                <h2 style="margin: 0 0 20px 0; color: #8b4513;">Como deseja pagar?</h2>
+                <h2 style="margin: 0 0 20px 0; color: #62001f3;">Como deseja pagar?</h2>
 
                 <button onclick="selecionarPagamento('pix')" style="
                     width: 100%;
                     padding: 20px;
                     margin: 10px 0;
-                    border: 2px solid #8b4513;
-                    background: #8b4513;
+                    border: 2px solid #62001f;
+                    background: #62001f;
                     color: white;
                     border-radius: 10px;
                     font-size: 18px;
@@ -580,9 +580,9 @@ function escolherMetodoPagamento() {
                     width: 100%;
                     padding: 20px;
                     margin: 10px 0;
-                    border: 2px solid #8b4513;
+                    border: 2px solid #62001f;
                     background: white;
-                    color: #8b4513;
+                    color: #62001f;
                     border-radius: 10px;
                     font-size: 18px;
                     font-weight: bold;
