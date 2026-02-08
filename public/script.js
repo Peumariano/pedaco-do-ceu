@@ -634,20 +634,20 @@ function showOrderConfirmation(customer, total, items) {
 }
 
 function montarMensagemWhatsApp(customer, total, items) {
-    let message = `*NOVO PEDIDO - Pedaço do Céu*\n\n`;
-    message += `*DADOS DO CLIENTE*\n`;
+    let message = `NOVO PEDIDO - Pedaço do Céu\n\n`;
+    message += `    DADOS DO CLIENTE\n`;
     message += `Nome: ${customer.name}\n`;
     message += `E-mail: ${customer.email}\n`;
     message += `Telefone: ${customer.phone}\n\n`;
     
-    message += ` *ITENS DO PEDIDO*\n`;
+    message += ` ITENS DO PEDIDO\n`;
     items.forEach(item => {
         message += `• ${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}\n`;
     });
     
     message += `*TOTAL: R$ ${total.toFixed(2)}*\n\n`;
     
-    message += `*ENDEREÇO PARA ENTREGA*\n`;
+    message += `ENDEREÇO PARA ENTREGA\n`;
     message += `${customer.address.street}, ${customer.address.number}`;
     if (customer.address.complement) {
         message += ` - ${customer.address.complement}`;
@@ -657,7 +657,7 @@ function montarMensagemWhatsApp(customer, total, items) {
     message += `CEP: ${customer.address.cep}\n\n`;
     
     if (customer.observations) {
-        message += `📝 *OBSERVAÇÕES*\n${customer.observations}\n\n`;
+        message += `OBSERVAÇÕES\n${customer.observations}\n\n`;
     }
     
     message += `*Pedido confirmado!*\n`;
