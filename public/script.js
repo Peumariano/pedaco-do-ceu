@@ -926,7 +926,7 @@ function mostrarModalPix(paymentData) {
                     onmouseover="this.style.background='#fff'; this.style.color='#a02b52'; this.style.border='1px solid #62001f'; this.style.transform='scale(1.01)'" 
                     onmouseout="this.style.background='#a02b52'; this.style.color='#fff'; this.style.transform='scale(1)'"
                     
-
+                    style="
                         background: #a02b52;
                         color: white;
                         border: 1px solid #62001f;
