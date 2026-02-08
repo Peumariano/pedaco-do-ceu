@@ -863,13 +863,13 @@ function mostrarModalPix(paymentData) {
         ">
             <!-- Header -->
             <div style="
-                background: linear-gradient(135deg, #8b4513 0%, #5c2e0a 100%);
+                background: linear-gradient(135deg, #62001f 0%, #a02b52 100%);
                 color: white;
                 padding: 25px;
                 border-radius: 15px 15px 0 0;
                 text-align: center;
             ">
-                <h2 style="margin: 0; font-size: 24px;">💳 Pagamento Pix</h2>
+                <h2 style="margin: 0; font-size: 24px;">Pagamento Pix</h2>
                 <p style="margin: 10px 0 0 0; opacity: 0.9;">Escaneie o QR Code para pagar</p>
             </div>
 
@@ -912,11 +912,11 @@ function mostrarModalPix(paymentData) {
                     <div style="
                         background: #a02b520b;
                         padding: 15px;
-                        border-radius: 80px;
+                        border-radius: 18px;
                         border: 1px solid #62001f;
                         word-break: break-all;
                         font-family: Grandstander, cursive;
-                        font-size: 12px;
+                        font-size: 18px;
                         margin-bottom: 10px;
                     ">
                         ${paymentData.qrCode}
