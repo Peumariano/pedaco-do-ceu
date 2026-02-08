@@ -112,8 +112,16 @@ const products = [
         name: "Caixa de brigadeiro",
         category: "Caixas",
         description: "Brigadeiros personalizados",
-        price: 14.00,
+        price: 42.00,
         image: "assets/caixa-brigadeiro.png"
+    },
+    {
+        id: 14,
+        name: "Caixa com 4 brigadeiros",
+        category: "Caixas",
+        description: "Caixa com 4 brigadeiros a sua escolha",
+        price: 14.00,
+        image: "assets/caixa-brigadeiro2.png"
     }
   
 ];
@@ -305,7 +313,6 @@ document.head.appendChild(style);
 
 renderProducts();
 
-// ===== CHECKOUT =====
 
 function openCheckout() {
     const modal = document.getElementById('checkout-modal');
@@ -446,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
         name: formData.get('name'),
         email: formData.get('email'),
         phone: formData.get('phone'),
-        cpf: formData.get('cpf'), // NOVO: campo CPF
+        cpf: formData.get('cpf'),
         address: {
             cep: formData.get('cep'),
             street: formData.get('street'),
@@ -459,7 +466,6 @@ document.addEventListener('DOMContentLoaded', function() {
         observations: formData.get('observations')
     };
     
-    // Calcula total
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
     const metodoPagamento = await escolherMetodoPagamento();
@@ -468,20 +474,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         showNotification('💳 Processando pagamento...');
         
-        // Cria pagamento Pix
+        
         const resultado = await criarPagamentoPix(customer, cart, total);
         
         if (resultado.success) {
-            // Salva pedido no histórico (status: aguardando pagamento)
             saveOrder(customer, cart, total, 'pending_payment', resultado.orderId);
-            
-            // Mostra QR Code do Pix
+       
             mostrarModalPix(resultado.payment);
-            
-            // Fecha modal de checkout
+           
             closeCheckout();
-            
-            // Limpa carrinho
+          
             cart = [];
             updateCart();
             
@@ -490,17 +492,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
     } else if (metodoPagamento === 'dinheiro') {
-        // Salva pedido
         saveOrder(customer, cart, total, 'pending', Date.now());
-        
-        // Envia WhatsApp
+       
         showOrderConfirmation(customer, total, cart);
-        
-        // Limpa carrinho
+       
         cart = [];
         updateCart();
-        
-        // Fecha modal
+      
         closeCheckout();
     }
     })
@@ -529,7 +527,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function escolherMetodoPagamento() {
     return new Promise((resolve) => {
-        // Cria modal de escolha
         const modal = document.createElement('div');
         modal.id = 'modal-pagamento';
         modal.style.cssText = `
@@ -599,7 +596,6 @@ function escolherMetodoPagamento() {
 
         document.body.appendChild(modal);
 
-        // Função para selecionar
         window.selecionarPagamento = function(metodo) {
             modal.remove();
             delete window.selecionarPagamento;
@@ -618,7 +614,7 @@ function saveOrder(customer, items, total, status = 'pending', orderId = null) {
         customer: customer,
         items: items,
         total: total,
-        status: status, // 'pending', 'pending_payment', 'approved', 'rejected'
+        status: status,
         paymentMethod: status === 'pending_payment' ? 'pix' : 'dinheiro'
     };
     
@@ -638,20 +634,20 @@ function showOrderConfirmation(customer, total, items) {
 }
 
 function montarMensagemWhatsApp(customer, total, items) {
-    let message = `🍫 *NOVO PEDIDO - Pedaço do Céu*\n\n`;
-    message += `👤 *DADOS DO CLIENTE*\n`;
+    let message = `*NOVO PEDIDO - Pedaço do Céu*\n\n`;
+    message += `*DADOS DO CLIENTE*\n`;
     message += `Nome: ${customer.name}\n`;
     message += `E-mail: ${customer.email}\n`;
     message += `Telefone: ${customer.phone}\n\n`;
     
-    message += `📦 *ITENS DO PEDIDO*\n`;
+    message += ` *ITENS DO PEDIDO*\n`;
     items.forEach(item => {
         message += `• ${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}\n`;
     });
     
-    message += `\n💰 *TOTAL: R$ ${total.toFixed(2)}*\n\n`;
+    message += `*TOTAL: R$ ${total.toFixed(2)}*\n\n`;
     
-    message += `📍 *ENDEREÇO PARA ENTREGA*\n`;
+    message += `*ENDEREÇO PARA ENTREGA*\n`;
     message += `${customer.address.street}, ${customer.address.number}`;
     if (customer.address.complement) {
         message += ` - ${customer.address.complement}`;
@@ -664,9 +660,9 @@ function montarMensagemWhatsApp(customer, total, items) {
         message += `📝 *OBSERVAÇÕES*\n${customer.observations}\n\n`;
     }
     
-    message += `✅ *Pedido confirmado!*\n`;
+    message += `*Pedido confirmado!*\n`;
     message += `Aguardando cálculo do frete para o endereço informado.\n`;
-    message += `Em breve entraremos em contato! 🚚`;
+    message += `Em breve entraremos em contato!`;
     
     return message;
 }
@@ -680,11 +676,9 @@ function enviarParaWhatsApp(message) {
     }, 1000);
 }
 
-// ===== ENVIO DE EMAIL - LÓGICA IDÊNTICA AO DIAGNÓSTICO QUE FUNCIONOU =====
 function enviarEmailConfirmacao(customer, total, items) {
     console.log('📧 Iniciando envio de email...');
     
-    // Verifica se EmailJS está pronto (igual ao diagnóstico)
     if (!window.emailJsReady) {
         console.error('❌ EmailJS não está pronto!');
         showNotification('⚠️ Sistema de email não inicializado');
@@ -698,14 +692,12 @@ function enviarEmailConfirmacao(customer, total, items) {
     }
     
     console.log('✅ EmailJS disponível e pronto');
-    
-    // Monta lista de produtos em TEXTO (igual ao diagnóstico)
+
     let order_items = '';
     items.forEach(item => {
         order_items += `${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}\n`;
     });
-    
-    // Monta lista de produtos em HTML (igual ao diagnóstico)
+
     let order_items_html = '';
     items.forEach(item => {
         order_items_html += `
@@ -717,11 +709,9 @@ function enviarEmailConfirmacao(customer, total, items) {
                     </tr>
                 `;
     });
-    
-    // Endereço completo
+
     const delivery_address = `${customer.address.street}, ${customer.address.number}${customer.address.complement ? ' - ' + customer.address.complement : ''}, ${customer.address.neighborhood}, ${customer.address.city}/${customer.address.state} - CEP: ${customer.address.cep}`;
-    
-    // Parâmetros IDÊNTICOS ao diagnóstico que funcionou
+
     const templateParams = {
         to_email: customer.email,
         customer_name: customer.name,
@@ -738,8 +728,7 @@ function enviarEmailConfirmacao(customer, total, items) {
     
     console.log('📦 Parâmetros preparados:', templateParams);
     console.log('🚀 Enviando email...');
-    
-    // ENVIA - exatamente como no diagnóstico
+
     emailjs.send(
         EMAILJS_CONFIG.serviceId,
         EMAILJS_CONFIG.templateId,
@@ -757,32 +746,18 @@ function enviarEmailConfirmacao(customer, total, items) {
 }
 
 
-
-// ============================================
-// MERCADO PAGO - INTEGRAÇÃO FRONTEND
-// Adicione este código ao seu script.js
-// ============================================
-
-// CONFIGURAÇÃO
 const API_URL = ''; 
-
-// ============================================
-// FUNÇÃO: CRIAR PAGAMENTO PIX
-// ============================================
 
 async function criarPagamentoPix(customer, items, total) {
     try {
         console.log('💳 Criando pagamento Pix...');
-        
-        // Gera um ID único para o pedido
+            
         const orderId = `ORD-${Date.now()}`;
-        
-        // Monta descrição do pedido
+       
         const descricao = items.map(item => 
             `${item.quantity}x ${item.name}`
         ).join(', ');
 
-        // Dados que serão enviados para o backend
         const paymentData = {
             amount: total,
             description: descricao,
@@ -790,7 +765,7 @@ async function criarPagamentoPix(customer, items, total) {
                 name: customer.name,
                 email: customer.email,
                 phone: customer.phone,
-                cpf: customer.cpf || null, // Adicione campo CPF no formulário se necessário
+                cpf: customer.cpf || null,
             },
             items: items.map(item => ({
                 id: item.id,
@@ -803,7 +778,6 @@ async function criarPagamentoPix(customer, items, total) {
 
         console.log('Enviando dados:', paymentData);
 
-        // Faz requisição para o backend
         const response = await fetch(`${API_URL}/api/create-payment`, {
             method: 'POST',
             headers: {
@@ -835,10 +809,6 @@ async function criarPagamentoPix(customer, items, total) {
     }
 }
 
-// ============================================
-// FUNÇÃO: VERIFICAR STATUS DO PAGAMENTO
-// ============================================
-
 async function verificarStatusPagamento(paymentId) {
     try {
         const response = await fetch(`${API_URL}/api/check-payment/${paymentId}`);
@@ -856,21 +826,18 @@ async function verificarStatusPagamento(paymentId) {
     }
 }
 
-// ============================================
-// FUNÇÃO: MOSTRAR MODAL DE PAGAMENTO PIX
-// ============================================
+
 
 function mostrarModalPix(paymentData) {
-    // Remove modal anterior se existir
     const modalExistente = document.getElementById('modal-pix');
     if (modalExistente) {
         modalExistente.remove();
     }
 
-    // Cria o modal
     const modal = document.createElement('div');
     modal.id = 'modal-pix';
     modal.style.cssText = `
+        font-family: "Grandstander", cursive;  
         position: fixed;
         top: 0;
         left: 0;
@@ -909,17 +876,6 @@ function mostrarModalPix(paymentData) {
             <!-- Body -->
             <div style="padding: 30px; text-align: center;">
                 
-                <!-- Status -->
-                <div id="pix-status" style="
-                    padding: 15px;
-                    background: #fff3cd;
-                    border: 1px solid #ffc107;
-                    border-radius: 8px;
-                    margin-bottom: 20px;
-                    color: #856404;
-                ">
-                    ⏳ Aguardando pagamento...
-                </div>
 
                 <!-- Valor -->
                 <div style="margin-bottom: 20px;">
@@ -936,34 +892,54 @@ function mostrarModalPix(paymentData) {
                          style="width: 280px; height: 280px; border: 2px solid #ddd; border-radius: 10px;">
                 </div>
 
+                    <!-- Status -->
+                <div id="pix-status" style="
+                    padding: 15px;
+                    background: #f1f49625;
+                    border: none;
+                    border-radius: 18px;
+                    margin-bottom: 20px;
+                    color: #62001f;
+                ">
+                    ⏳ Aguardando pagamento...
+                </div>
+
                 <!-- Código Pix Copia e Cola -->
                 <div style="margin-bottom: 20px;">
                     <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
                         Ou copie o código Pix:
                     </p>
                     <div style="
-                        background: #f5f5f5;
+                        background: #a02b520b;
                         padding: 15px;
-                        border-radius: 8px;
-                        border: 1px solid #ddd;
+                        border-radius: 80px;
+                        border: 1px solid #62001f;
                         word-break: break-all;
-                        font-family: monospace;
+                        font-family: Grandstander, cursive;
                         font-size: 12px;
                         margin-bottom: 10px;
                     ">
                         ${paymentData.qrCode}
                     </div>
-                    <button onclick="copiarCodigoPix('${paymentData.qrCode}')" style="
-                        background: #8b4513;
+                    <button
+                    onclick="copiarCodigoPix('${paymentData.qrCode}')"
+                    onmouseover="this.style.background='#fff'; this.style.color='#a02b52'; this.style.border='1px solid #62001f'; this.style.transform='scale(1.01)'" 
+                    onmouseout="this.style.background='#a02b52'; this.style.color='#fff'; this.style.transform='scale(1)'"
+                    
+
+                        background: #a02b52;
                         color: white;
-                        border: none;
+                        border: 1px solid #62001f;
                         padding: 12px 24px;
-                        border-radius: 8px;
+                        border-radius: 80px;
                         cursor: pointer;
                         font-size: 14px;
                         font-weight: 600;
-                    ">
-                        📋 Copiar Código Pix
+                        transition: all .4s ease;
+                        "
+                        
+                        >
+                        Copiar Código Pix
                     </button>
                 </div>
 
@@ -1009,20 +985,14 @@ function mostrarModalPix(paymentData) {
 
     document.body.appendChild(modal);
 
-    // Inicia verificação automática do status
     iniciarVerificacaoPagamento(paymentData.id);
 }
-
-// ============================================
-// FUNÇÃO: COPIAR CÓDIGO PIX
-// ============================================
 
 function copiarCodigoPix(codigo) {
     navigator.clipboard.writeText(codigo).then(() => {
         alert('✅ Código Pix copiado! Cole no app do seu banco.');
     }).catch(err => {
         console.error('Erro ao copiar:', err);
-        // Fallback: criar input temporário
         const input = document.createElement('input');
         input.value = codigo;
         document.body.appendChild(input);
@@ -1033,34 +1003,24 @@ function copiarCodigoPix(codigo) {
     });
 }
 
-// ============================================
-// FUNÇÃO: FECHAR MODAL PIX
-// ============================================
-
 function fecharModalPix() {
     const modal = document.getElementById('modal-pix');
     if (modal) {
         modal.remove();
     }
-    // Para a verificação automática
     if (window.verificacaoInterval) {
         clearInterval(window.verificacaoInterval);
     }
 }
 
-// ============================================
-// FUNÇÃO: VERIFICAÇÃO AUTOMÁTICA DO PAGAMENTO
-// ============================================
 
 function iniciarVerificacaoPagamento(paymentId) {
     console.log('🔄 Iniciando verificação automática do pagamento...');
     
-    // Limpa intervalo anterior se existir
     if (window.verificacaoInterval) {
         clearInterval(window.verificacaoInterval);
     }
 
-    // Verifica a cada 3 segundos
     window.verificacaoInterval = setInterval(async () => {
         const payment = await verificarStatusPagamento(paymentId);
         
@@ -1070,7 +1030,6 @@ function iniciarVerificacaoPagamento(paymentId) {
             const statusDiv = document.getElementById('pix-status');
             
             if (payment.status === 'approved') {
-                // PAGAMENTO APROVADO! 🎉
                 if (statusDiv) {
                     statusDiv.style.background = '#d4edda';
                     statusDiv.style.borderColor = '#28a745';
@@ -1080,7 +1039,6 @@ function iniciarVerificacaoPagamento(paymentId) {
                 
                 clearInterval(window.verificacaoInterval);
                 
-                // Aguarda 2 segundos e fecha o modal
                 setTimeout(() => {
                     fecharModalPix();
                     mostrarConfirmacaoPagamento();
@@ -1088,7 +1046,6 @@ function iniciarVerificacaoPagamento(paymentId) {
             }
             
             if (payment.status === 'rejected' || payment.status === 'cancelled') {
-                // PAGAMENTO REJEITADO/CANCELADO
                 if (statusDiv) {
                     statusDiv.style.background = '#f8d7da';
                     statusDiv.style.borderColor = '#dc3545';
@@ -1099,28 +1056,20 @@ function iniciarVerificacaoPagamento(paymentId) {
                 clearInterval(window.verificacaoInterval);
             }
         }
-    }, 3000); // Verifica a cada 3 segundos
+    }, 3000);
 
-    // Para a verificação após 10 minutos (timeout)
     setTimeout(() => {
         if (window.verificacaoInterval) {
             clearInterval(window.verificacaoInterval);
             console.log('⏱️ Timeout: Verificação automática encerrada');
         }
-    }, 600000); // 10 minutos
+    }, 600000);
 }
 
-// ============================================
-// FUNÇÃO: MOSTRAR CONFIRMAÇÃO DE PAGAMENTO
-// ============================================
 
 function mostrarConfirmacaoPagamento() {
     alert('🎉 Pagamento aprovado com sucesso!\n\nSeu pedido foi confirmado e já está sendo preparado.\n\nEm breve você receberá uma confirmação por email e WhatsApp.');
-    
-    // Limpa o carrinho
+
     cart = [];
     updateCart();
-    
-    // Opcional: Redirecionar para página de confirmação
-    // window.location.href = 'pedido-confirmado.html';
 }
