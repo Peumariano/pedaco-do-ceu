@@ -109,7 +109,7 @@ const products = [
 
     {
         id: 13,
-        name: "Caixa de brigadeiro",
+        name: "Caixa de Brigadeiro",
         category: "Caixas",
         description: "Brigadeiros personalizados",
         price: 42.00,
@@ -122,7 +122,40 @@ const products = [
         description: "Caixa com 4 brigadeiros a sua escolha",
         price: 14.00,
         image: "assets/caixa-brigadeiro2.png"
+    },
+    {
+        id: 15,
+        name: "Coxinha de Morango",
+        category: "diferente",
+        description: "Coxinha de morango em formato de coração",
+        price: 15.00,
+        image: "assets/coxinha-morango.png"
+    },
+     {
+        id: 16,
+        name: "Coxinha de Morango",
+        category: "diferente",
+        description: "Coxinha de morango",
+        price: 12.00,
+        image: "assets/coxinha-morango2.png"
+    },  
+    {
+        id: 16,
+        name: "Coxinha de Morango de Ninho",
+        category: "diferente",
+        description: "Coxinha de morango em formato de coração com sabor ninho",
+        price: 15.00,
+        image: "assets/coxinha-morango-ninho.png"
+    },
+     {
+        id: 17,
+        name: "Coxinha de Morango de Ninho",
+        category: "diferente",
+        description: "Coxinha de morango com sabor ninho",
+        price: 12.00,
+        image: "assets/coxinha-morango-ninho2.png"
     }
+
   
 ];
 let cart = [];
