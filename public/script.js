@@ -720,43 +720,35 @@ function enviarEmailConfirmacao(customer, total, items) {
     
     if (!window.emailJsReady) {
         console.error('❌ EmailJS não está pronto!');
-        showNotification('⚠️ Sistema de email não inicializado');
         return;
     }
     
     if (typeof emailjs === 'undefined') {
         console.error('❌ EmailJS não disponível');
-        showNotification('⚠️ Email não pôde ser enviado');
         return;
     }
     
-    console.log('✅ EmailJS disponível e pronto');
-
-    let order_items = '';
-    items.forEach(item => {
-        order_items += `${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}\n`;
-    });
-
+    // Monta lista de produtos em HTML
     let order_items_html = '';
     items.forEach(item => {
         order_items_html += `
-                    <tr>
-                        <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.name}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">R$ ${item.price.toFixed(2)}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold;">R$ ${(item.price * item.quantity).toFixed(2)}</td>
-                    </tr>
-                `;
+            <tr>
+                <td>${item.name}</td>
+                <td style="text-align: center;">${item.quantity}</td>
+                <td style="text-align: right;">R$ ${item.price.toFixed(2)}</td>
+                <td style="text-align: right; font-weight: bold;">R$ ${(item.price * item.quantity).toFixed(2)}</td>
+            </tr>
+        `;
     });
-
+    
+    // Endereço completo
     const delivery_address = `${customer.address.street}, ${customer.address.number}${customer.address.complement ? ' - ' + customer.address.complement : ''}, ${customer.address.neighborhood}, ${customer.address.city}/${customer.address.state} - CEP: ${customer.address.cep}`;
-
+    
+    // Parâmetros do template
     const templateParams = {
-        to_email: customer.email,
         customer_name: customer.name,
         customer_email: customer.email,
         customer_phone: customer.phone,
-        order_items: order_items,
         order_items_html: order_items_html,
         order_total: `R$ ${total.toFixed(2)}`,
         delivery_address: delivery_address,
@@ -765,21 +757,21 @@ function enviarEmailConfirmacao(customer, total, items) {
         order_number: Date.now()
     };
     
-    console.log('📦 Parâmetros preparados:', templateParams);
     console.log('🚀 Enviando email...');
-
+    
+    // Envia
     emailjs.send(
         EMAILJS_CONFIG.serviceId,
         EMAILJS_CONFIG.templateId,
         templateParams
     ).then(
         function(response) {
-            console.log('✅ Email enviado com sucesso!', response.status, response.text);
+            console.log('✅ Email enviado!', response.status);
             showNotification('✅ Email de confirmação enviado!');
         },
         function(error) {
-            console.error('❌ Erro ao enviar email:', error);
-            showNotification('⚠️ Erro ao enviar email: ' + (error.text || 'Verifique o console'));
+            console.error('❌ Erro:', error);
+            showNotification('⚠️ Erro ao enviar email');
         }
     );
 }
