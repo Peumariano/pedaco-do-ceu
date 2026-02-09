@@ -6,8 +6,8 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: "Grandstander", cursive;    
+body {    font-family: "Grandstander", cursive;    
+
     background: linear-gradient(135deg, #ffeef8 0%, #fff5e6 100%);
     min-height: 100vh;
 }
@@ -596,7 +596,7 @@ header .container {
 }
 
 .btn-copiar-pix{
-    
+
 }
 
 

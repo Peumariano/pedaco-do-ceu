@@ -1115,10 +1115,6 @@ function mostrarConfirmacaoPagamento() {
 
 
 
-// Adicione esta função no seu script.js
-
-// SOLUÇÃO HÍBRIDA: Cliente envia mensagem do WhatsApp dele para você
-
 function enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId) {
     // Monta mensagem que o CLIENTE vai enviar para VOCÊ
     const mensagem = `*CONFIRMAÇÃO DE PEDIDO* 🛒
