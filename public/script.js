@@ -1111,7 +1111,7 @@ function enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId) {
     // Monta mensagem que o CLIENTE vai enviar para VOCÊ
     const mensagem = `*CONFIRMAÇÃO DE PEDIDO* 🛒
 
-📱 Olá! Gostaria de confirmar meu pedido:
+Olá! Gostaria de confirmar meu pedido:
 
 *Dados:*
 Nome: ${customer.name}
