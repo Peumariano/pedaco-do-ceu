@@ -481,7 +481,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const formData = new FormData(e.target);
     
-    // Coleta dados do cliente
     const customer = {
         name: formData.get('name'),
         email: formData.get('email'),
@@ -660,11 +659,18 @@ function saveOrder(customer, items, total, status = 'pending', orderId = null) {
 function showOrderConfirmation(customer, total, items) {
     console.log('✅ Processando pedido...');
     
-    const message = montarMensagemWhatsApp(customer, total, items);
-    enviarParaWhatsApp(message);
+    const orderId = `ORD-${Date.now()}`;
+    
+    // Salva pedido
+    saveOrder(customer, items, total, 'pending', orderId);
+    
+    // Envia email
     enviarEmailConfirmacao(customer, total, items);
-    showNotification('Pedido enviado! Você será redirecionado para o WhatsApp...');
+    
+    // NOVO: Modal WhatsApp
+    enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId);
 }
+
 
 function montarMensagemWhatsApp(customer, total, items) {
     let message = `NOVO PEDIDO - Pedaço do Céu\n\n`;
@@ -1105,4 +1111,164 @@ function mostrarConfirmacaoPagamento() {
 
     cart = [];
     updateCart();
+}
+
+
+
+// Adicione esta função no seu script.js
+
+// SOLUÇÃO HÍBRIDA: Cliente envia mensagem do WhatsApp dele para você
+
+function enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId) {
+    // Monta mensagem que o CLIENTE vai enviar para VOCÊ
+    const mensagem = `🛒 *CONFIRMAÇÃO DE PEDIDO* 🛒
+
+📱 Olá! Gostaria de confirmar meu pedido:
+
+👤 *Dados:*
+Nome: ${customer.name}
+Email: ${customer.email}
+Telefone: ${customer.phone}
+
+📦 *Pedido #${orderId}:*
+${items.map(item => `• ${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+
+💰 *Total:* R$ ${total.toFixed(2)}
+
+📍 *Endereço de Entrega:*
+${customer.address.street}, ${customer.address.number}
+${customer.address.neighborhood}
+${customer.address.city}/${customer.address.state}
+CEP: ${customer.address.cep}
+
+${customer.observations ? `📝 Observações: ${customer.observations}` : ''}
+
+✅ Aguardo confirmação do pedido e informações sobre entrega!`;
+
+    // Número da LOJA (você)
+    const numeroLoja = WHATSAPP_LOJA; // Já está configurado: "11991084308"
+    
+    // Codifica mensagem
+    const mensagemCodificada = encodeURIComponent(mensagem);
+    
+    // URL do WhatsApp Web/App
+    const urlWhatsApp = `https://wa.me/${numeroLoja}?text=${mensagemCodificada}`;
+    
+    // Mostra modal perguntando se quer confirmar
+    mostrarModalConfirmacaoWhatsApp(urlWhatsApp, customer.name);
+}
+
+function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
+    const modal = document.createElement('div');
+    modal.id = 'modal-whatsapp-confirmacao';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 20px;
+    `;
+
+    modal.innerHTML = `
+        <div style="
+            background: white;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        ">
+            <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
+            <h2 style="margin: 0 0 15px 0; color: #25D366;">Pedido Recebido!</h2>
+            <p style="color: #666; margin-bottom: 25px;">
+                Olá <strong>${nomeCliente}</strong>!<br>
+                Seu pedido foi registrado com sucesso.
+            </p>
+
+            <div style="
+                background: #f0f0f0;
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 25px;
+                text-align: left;
+            ">
+                <p style="margin: 0 0 10px 0; font-weight: bold;">📱 Próximo passo:</p>
+                <p style="margin: 0; font-size: 14px; color: #555;">
+                    Clique no botão abaixo para enviar a confirmação do seu pedido 
+                    via WhatsApp. Uma mensagem já estará pronta, você só precisa clicar em "Enviar".
+                </p>
+            </div>
+
+            <button onclick="window.open('${urlWhatsApp}', '_blank'); fecharModalWhatsAppConfirmacao();" style="
+                width: 100%;
+                padding: 18px;
+                margin-bottom: 10px;
+                border: none;
+                background: #25D366;
+                color: white;
+                border-radius: 10px;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            ">
+                <span style="font-size: 24px;">💬</span>
+                Confirmar via WhatsApp
+            </button>
+
+            <button onclick="fecharModalWhatsAppConfirmacao()" style="
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                background: white;
+                color: #666;
+                border-radius: 10px;
+                font-size: 14px;
+                cursor: pointer;
+            ">
+                Fechar
+            </button>
+
+            <p style="margin: 20px 0 0 0; font-size: 12px; color: #999;">
+                💡 Você também receberá um email de confirmação
+            </p>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function fecharModalWhatsAppConfirmacao() {
+    const modal = document.getElementById('modal-whatsapp-confirmacao');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+
+function showOrderConfirmation(customer, total, items) {
+    console.log('✅ Processando pedido...');
+    
+    const orderId = `ORD-${Date.now()}`;
+    
+    // Salva pedido
+    saveOrder(customer, items, total, 'pending', orderId);
+    
+    // Envia email (mantém como está)
+    enviarEmailConfirmacao(customer, total, items);
+    
+    // NOVA FUNÇÃO: Mostra modal para cliente confirmar via WhatsApp
+    enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId);
+    
+    // Notificação
+    showNotification('Pedido registrado! Confirme via WhatsApp.');
 }
