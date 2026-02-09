@@ -154,50 +154,6 @@ Desenvolvido tanto como **solução real de negócio** este projeto demonstra co
   </tr>
 </table>
 
----
-
-## 🎯 Diferenciais Técnicos
-
-### 🏗️ Arquitetura Serverless
-```mermaid
-graph LR
-    A[Frontend<br/>Vercel] -->|API Calls| B[Serverless<br/>Functions]
-    B -->|SDK| C[Mercado Pago<br/>API]
-    C -->|Response| B
-    B -->|JSON| A
-    
-    style A fill:#61dafb
-    style B fill:#000000
-    style C fill:#00b1ea
-```
-
-**Vantagens:**
-- ✅ Escalabilidade automática sob demanda
-- ✅ Custos otimizados (pay-per-use)
-- ✅ Zero manutenção de servidores
-- ✅ Deploy instantâneo
-
-### 🔐 Segurança
-```javascript
-✓ Tokens de acesso via variáveis de ambiente
-✓ Validação de dados no backend
-✓ CORS configurado adequadamente
-✓ Nenhuma credencial exposta no frontend
-✓ Sanitização de inputs
-✓ HTTPS obrigatório
-```
-
-### 📐 Boas Práticas
-
-- 📝 Código limpo e bem documentado
-- 🐛 Tratamento robusto de erros
-- 📊 Logs estruturados para debugging
-- 🎯 Separação clara de responsabilidades
-- ♻️ Código reutilizável e modular
-- 🧪 Testável e manutenível
-
----
-
 ## 🛠️ Como Executar
 
 ### Pré-requisitos
