@@ -1121,29 +1121,29 @@ function mostrarConfirmacaoPagamento() {
 
 function enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId) {
     // Monta mensagem que o CLIENTE vai enviar para VOCÊ
-    const mensagem = `🛒 *CONFIRMAÇÃO DE PEDIDO* 🛒
+    const mensagem = `*CONFIRMAÇÃO DE PEDIDO* 🛒
 
 📱 Olá! Gostaria de confirmar meu pedido:
 
-👤 *Dados:*
+*Dados:*
 Nome: ${customer.name}
 Email: ${customer.email}
 Telefone: ${customer.phone}
 
-📦 *Pedido #${orderId}:*
+*Pedido #${orderId}:*
 ${items.map(item => `• ${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}`).join('\n')}
 
-💰 *Total:* R$ ${total.toFixed(2)}
+*Total:* R$ ${total.toFixed(2)}
 
-📍 *Endereço de Entrega:*
+*Endereço de Entrega:*
 ${customer.address.street}, ${customer.address.number}
 ${customer.address.neighborhood}
 ${customer.address.city}/${customer.address.state}
 CEP: ${customer.address.cep}
 
-${customer.observations ? `📝 Observações: ${customer.observations}` : ''}
+${customer.observations ? `Observações: ${customer.observations}` : ''}
 
-✅ Aguardo confirmação do pedido e informações sobre entrega!`;
+Aguardo confirmação do pedido e informações sobre entrega!`;
 
     // Número da LOJA (você)
     const numeroLoja = WHATSAPP_LOJA; // Já está configurado: "11991084308"
