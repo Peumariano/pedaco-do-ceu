@@ -16,7 +16,9 @@
   "author": "Pedaço do Céu",
   "license": "MIT",
   "dependencies": {
-    "mercadopago": "^2.0.9"
+    "firebase-admin": "^13.6.1",
+    "mercadopago": "^2.0.9",
+    "mongoose": "^9.2.1"
   },
   "engines": {
     "node": "24.x"

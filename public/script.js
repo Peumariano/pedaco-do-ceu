@@ -344,7 +344,170 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-renderProducts();
+// Carrega produtos do MongoDB quando a página carregar
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('✅ DOM carregado');
+    
+    // Carrega produtos do MongoDB
+    await carregarProdutosMongoDB();
+    
+    // Configurações de máscaras e formulário
+    configurarMascaras();
+    configurarFormulario();
+});
+
+// ============================================
+// Função para carregar produtos do MongoDB
+// ============================================
+async function carregarProdutosMongoDB(categoria = 'todos') {
+    try {
+        console.log('📦 Buscando produtos do MongoDB...');
+        
+        const url = categoria === 'todos'
+            ? '/api/products'
+            : `/api/products?category=${categoria}`;
+
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error('Erro ao buscar produtos');
+        }
+        
+        const data = await response.json();
+
+        if (data.success && data.products) {
+            console.log(`✅ ${data.products.length} produtos carregados do MongoDB`);
+            renderProducts(data.products);
+            return data.products;
+        } else {
+            throw new Error('Dados inválidos');
+        }
+
+    } catch (error) {
+        console.error('❌ Erro ao carregar produtos:', error);
+        console.log('⚠️ Usando produtos do array local como fallback');
+        renderProducts(products);
+        showNotification('⚠️ Alguns produtos podem não estar disponíveis');
+        return products;
+    }
+}
+
+// ============================================
+// Atualizar função de filtro
+// ============================================
+async function filterProducts(category, element) {
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    if (element) element.classList.add('active');
+    
+    await carregarProdutosMongoDB(category);
+}
+
+// ============================================
+// Mover configurações para funções separadas
+// ============================================
+function configurarMascaras() {
+    const cepInput = document.getElementById('cep');
+    if (cepInput) {
+        cepInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.slice(0, 5) + '-' + value.slice(5, 8);
+            }
+            e.target.value = value;
+            if (value.replace(/\D/g, '').length === 8) {
+                searchCEP(value);
+            }
+        });
+    }
+
+    const phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+            } else {
+                value = value.replace(/^(\d*)/, '($1');
+            }
+            e.target.value = value;
+        });
+    }
+    
+    const cpfInput = document.getElementById('cpf');
+    if (cpfInput) {
+        cpfInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) {
+                value = value.slice(0, 11);
+            }
+            if (value.length > 9) {
+                value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{3})(\d{3})(\d{1,3})$/, '$1.$2.$3');
+            } else if (value.length > 3) {
+                value = value.replace(/^(\d{3})(\d{1,3})$/, '$1.$2');
+            }
+            e.target.value = value;
+        });
+    }
+}
+
+function configurarFormulario() {
+    const form = document.getElementById('checkout-form');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            const customer = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                cpf: formData.get('cpf'),
+                address: {
+                    cep: formData.get('cep'),
+                    street: formData.get('street'),
+                    number: formData.get('number'),
+                    complement: formData.get('complement'),
+                    neighborhood: formData.get('neighborhood'),
+                    city: formData.get('city'),
+                    state: formData.get('state')
+                },
+                observations: formData.get('observations')
+            };
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const metodoPagamento = await escolherMetodoPagamento();
+            
+            if (metodoPagamento === 'pix') {
+                showNotification('💳 Processando pagamento...');
+                const resultado = await criarPagamentoPix(customer, cart, total);
+                
+                if (resultado.success) {
+                    saveOrder(customer, cart, total, 'pending_payment', resultado.orderId);
+                    mostrarModalPix(resultado.payment);
+                    closeCheckout();
+                    cart = [];
+                    updateCart();
+                } else {
+                    alert('❌ Erro ao processar pagamento: ' + resultado.error);
+                }
+            } else if (metodoPagamento === 'dinheiro') {
+                saveOrder(customer, cart, total, 'pending', Date.now());
+                showOrderConfirmation(customer, total, cart);
+                cart = [];
+                updateCart();
+                closeCheckout();
+            }
+        });
+    }
+}
 
 
 function openCheckout() {
