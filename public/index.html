@@ -192,7 +192,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <script>
-        console.log('📦 EmailJS carregado');
         window.emailJsReady = false;
         
 
@@ -201,9 +200,9 @@
                 try {
                     emailjs.init("QJEsDhXmiLiWFglo_");
                     window.emailJsReady = true;
-                    console.log('✅✅✅ EMAILJS PRONTO ✅✅✅');
+                    console.log('EMAILJS PRONTO');
                 } catch (error) {
-                    console.error('❌ Erro ao inicializar EmailJS:', error);
+                    console.error('Erro ao inicializar EmailJS:', error);
                 }
             } else {
                 setTimeout(tentarInicializar, 100);

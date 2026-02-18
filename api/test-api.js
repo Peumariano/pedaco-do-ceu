@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
     // Retorna sucesso para qualquer método
     return res.status(200).json({
         success: true,
-        message: '✅ API funcionando!',
+        message: 'API funcionando!',
         method: req.method,
         timestamp: new Date().toISOString()
     });

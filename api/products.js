@@ -8,14 +8,14 @@ let cachedDb = null;
 
 async function connectDB() {
     if (cachedDb) {
-        console.log('✅ Usando conexão MongoDB em cache');
+        console.log('Usando conexão MongoDB em cache');
         return cachedDb;
     }
     
     console.log('🔌 Conectando ao MongoDB...');
     const db = await mongoose.connect(process.env.MONGODB_URI);
     cachedDb = db;
-    console.log('✅ MongoDB conectado!');
+    console.log('MongoDB conectado!');
     return db;
 }
 
@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
             .sort({ category: 1, name: 1 })
             .lean(); // .lean() retorna objetos simples (mais rápido)
 
-        console.log(`📦 Retornando ${products.length} produtos`);
+        console.log(`Retornando ${products.length} produtos`);
 
         res.status(200).json({ 
             success: true, 
@@ -76,7 +76,7 @@ module.exports = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Erro ao buscar produtos:', error);
+        console.error('Erro ao buscar produtos:', error);
         res.status(500).json({ 
             success: false, 
             error: error.message 

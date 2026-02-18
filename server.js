@@ -35,8 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // CONEXÃO COM MONGODB ATLAS
 // ================================================
 mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('✅ MongoDB Atlas conectado!'))
-    .catch(err => console.error('❌ Erro MongoDB:', err));
+    .then(() => console.log('MongoDB Atlas conectado!'))
+    .catch(err => console.error('Erro MongoDB:', err));
 
 // ================================================
 // ROTAS PÚBLICAS - PRODUTOS
@@ -140,7 +140,7 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
             { $push: { orders: order._id } }
         );
 
-        console.log(`✅ Pedido ${order.orderNumber} criado!`);
+        console.log(`Pedido ${order.orderNumber} criado!`);
 
         res.json({ success: true, order });
 
@@ -288,7 +288,7 @@ app.post('/api/admin/seed', authMiddleware, adminMiddleware, async (req, res) =>
         await Product.deleteMany({});
         await Product.insertMany(brigadeiros);
 
-        res.json({ success: true, message: `✅ ${brigadeiros.length} produtos inseridos!` });
+        res.json({ success: true, message: `${brigadeiros.length} produtos inseridos!` });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
@@ -299,10 +299,10 @@ app.post('/api/admin/seed', authMiddleware, adminMiddleware, async (req, res) =>
 // ================================================
 app.listen(PORT, () => {
     console.log('\n' + '='.repeat(50));
-    console.log('🍫 PEDAÇO DO CÉU - SERVIDOR INICIADO');
+    console.log('PEDAÇO DO CÉU - SERVIDOR INICIADO');
     console.log('='.repeat(50));
-    console.log(`✅ Porta: ${PORT}`);
-    console.log(`🌐 URL: http://localhost:${PORT}`);
+    console.log(`Porta: ${PORT}`);
+    console.log(`URL: http://localhost:${PORT}`);
     console.log('='.repeat(50) + '\n');
 });
 

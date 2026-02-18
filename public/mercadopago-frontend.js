@@ -4,7 +4,7 @@ const API_URL = '';
 // Função para criar pagamento
 async function criarPagamentoPix(customer, items, total) {
     try {
-        console.log('💳 Criando pagamento Pix...');
+        console.log('Criando pagamento Pix...');
         
         const orderId = `ORD-${Date.now()}`;
         const descricao = items.map(item => 
@@ -46,7 +46,7 @@ async function criarPagamentoPix(customer, items, total) {
         };
 
     } catch (error) {
-        console.error('❌ Erro:', error);
+        console.error('Erro:', error);
         return {
             success: false,
             error: error.message
@@ -67,7 +67,7 @@ async function verificarStatusPagamento(paymentId) {
         return result.payment;
 
     } catch (error) {
-        console.error('❌ Erro:', error);
+        console.error('Erro:', error);
         return null;
     }
 }

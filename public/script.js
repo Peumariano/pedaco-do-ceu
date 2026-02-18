@@ -16,7 +16,7 @@ let cart = [];
 
 async function carregarProdutosMongoDB(categoria = 'todos') {
     try {
-        console.log('📦 Buscando produtos do MongoDB...');
+        console.log('Buscando produtos do MongoDB...');
         
         const url = categoria === 'todos'
             ? '/api/products'
@@ -31,7 +31,7 @@ async function carregarProdutosMongoDB(categoria = 'todos') {
         const data = await response.json();
 
         if (data.success && data.products) {
-            console.log(`✅ ${data.products.length} produtos carregados do MongoDB`);
+            console.log(`${data.products.length} produtos carregados do MongoDB`);
             
             // IMPORTANTE: Transforma os produtos do MongoDB no formato correto
             products = data.products.map(p => ({
@@ -50,8 +50,8 @@ async function carregarProdutosMongoDB(categoria = 'todos') {
         }
 
     } catch (error) {
-        console.error('❌ Erro ao carregar produtos:', error);
-        showNotification('⚠️ Erro ao carregar produtos. Tente recarregar a página.');
+        console.error('Erro ao carregar produtos:', error);
+        showNotification('Erro ao carregar produtos. Tente recarregar a página.');
         return [];
     }
 }
@@ -89,7 +89,7 @@ function addToCart(productId) {
     
     if (!product) {
         console.error('Produto não encontrado:', productId);
-        showNotification('❌ Erro ao adicionar produto');
+        showNotification('Erro ao adicionar produto');
         return;
     }
     
@@ -371,7 +371,7 @@ function escolherMetodoPagamento() {
                     justify-content: center;
                     gap: 10px;
                 ">
-                    💳 Pix (Pagamento Instantâneo)
+                    Pix (Pagamento Instantâneo)
                 </button>
 
                 <button class="btn-dinheiro" style="
@@ -390,7 +390,7 @@ function escolherMetodoPagamento() {
                     justify-content: center;
                     gap: 10px;
                 ">
-                    💵 Dinheiro na Entrega
+                    Dinheiro ou Cartão na entrega
                 </button>
             </div>
         `;
@@ -428,7 +428,7 @@ function saveOrder(customer, items, total, status = 'pending', orderId = null) {
 }
 
 function showOrderConfirmation(customer, total, items) {
-    console.log('✅ Processando pedido...');
+    console.log('Processando pedido...');
     
     const orderId = `ORD-${Date.now()}`;
     
@@ -438,15 +438,15 @@ function showOrderConfirmation(customer, total, items) {
 }
 
 function enviarEmailConfirmacao(customer, total, items) {
-    console.log('📧 Iniciando envio de email...');
+    console.log('Iniciando envio de email...');
     
     if (!window.emailJsReady) {
-        console.error('❌ EmailJS não está pronto!');
+        console.error('EmailJS não está pronto!');
         return;
     }
     
     if (typeof emailjs === 'undefined') {
-        console.error('❌ EmailJS não disponível');
+        console.error('EmailJS não disponível');
         return;
     }
     
@@ -482,11 +482,11 @@ function enviarEmailConfirmacao(customer, total, items) {
         templateParams
     ).then(
         function(response) {
-            console.log('✅ Email enviado!', response.status);
-            showNotification('✅ Email de confirmação enviado!');
+            console.log('Email enviado!', response.status);
+            showNotification('Email de confirmação enviado!');
         },
         function(error) {
-            console.error('❌ Erro:', error);
+            console.error('Erro:', error);
         }
     );
 }
@@ -496,7 +496,7 @@ const API_URL = '';
 
 async function criarPagamentoPix(customer, items, total) {
     try {
-        console.log('💳 Criando pagamento Pix...');
+        console.log('Criando pagamento Pix...');
         
         const orderId = `ORD-${Date.now()}`;
         
@@ -538,7 +538,7 @@ async function criarPagamentoPix(customer, items, total) {
             throw new Error(result.error || 'Erro ao criar pagamento');
         }
 
-        console.log('✅ Pagamento criado:', result);
+        console.log('Pagamento criado:', result);
 
         return {
             success: true,
@@ -547,7 +547,7 @@ async function criarPagamentoPix(customer, items, total) {
         };
 
     } catch (error) {
-        console.error('❌ Erro ao criar pagamento:', error);
+        console.error('Erro ao criar pagamento:', error);
         return {
             success: false,
             error: error.message
@@ -567,7 +567,7 @@ async function verificarStatusPagamento(paymentId) {
         return result.payment;
 
     } catch (error) {
-        console.error('❌ Erro ao verificar status:', error);
+        console.error('Erro ao verificar status:', error);
         return null;
     }
 }
@@ -638,7 +638,7 @@ function mostrarModalPix(paymentData) {
                     margin-bottom: 20px;
                     color: #62001f;
                 ">
-                    ⏳ Aguardando pagamento...
+                    Aguardando pagamento...
                 </div>
 
                 <div style="margin-bottom: 20px;">
@@ -681,7 +681,7 @@ function mostrarModalPix(paymentData) {
                     font-size: 13px;
                     margin-bottom: 20px;
                 ">
-                    <strong>📱 Como pagar:</strong>
+                    <strong>Como pagar:</strong>
                     <ol style="margin: 10px 0 0 0; padding-left: 20px;">
                         <li>Abra o app do seu banco</li>
                         <li>Escolha pagar com Pix</li>
@@ -725,7 +725,7 @@ function mostrarModalPix(paymentData) {
 
 function copiarCodigoPix(codigo) {
     navigator.clipboard.writeText(codigo).then(() => {
-        alert('✅ Código Pix copiado! Cole no app do seu banco.');
+        alert('Código Pix copiado! Cole no app do seu banco.');
     }).catch(err => {
         const input = document.createElement('input');
         input.value = codigo;
@@ -733,7 +733,7 @@ function copiarCodigoPix(codigo) {
         input.select();
         document.execCommand('copy');
         document.body.removeChild(input);
-        alert('✅ Código Pix copiado!');
+        alert('Código Pix copiado!');
     });
 }
 
@@ -748,7 +748,7 @@ function fecharModalPix() {
 }
 
 function iniciarVerificacaoPagamento(paymentId) {
-    console.log('🔄 Iniciando verificação automática...');
+    console.log('Iniciando verificação automática...');
     
     if (window.verificacaoInterval) {
         clearInterval(window.verificacaoInterval);
@@ -765,7 +765,7 @@ function iniciarVerificacaoPagamento(paymentId) {
                     statusDiv.style.background = '#d4edda';
                     statusDiv.style.borderColor = '#28a745';
                     statusDiv.style.color = '#155724';
-                    statusDiv.innerHTML = '✅ Pagamento aprovado!';
+                    statusDiv.innerHTML = 'Pagamento aprovado!';
                 }
                 
                 clearInterval(window.verificacaoInterval);
@@ -783,7 +783,7 @@ function iniciarVerificacaoPagamento(paymentId) {
                     statusDiv.style.background = '#f8d7da';
                     statusDiv.style.borderColor = '#dc3545';
                     statusDiv.style.color = '#721c24';
-                    statusDiv.innerHTML = '❌ Pagamento não aprovado';
+                    statusDiv.innerHTML = 'Pagamento não aprovado';
                 }
                 
                 clearInterval(window.verificacaoInterval);
@@ -800,7 +800,7 @@ function iniciarVerificacaoPagamento(paymentId) {
 
 // ===== WHATSAPP =====
 function enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId) {
-    const mensagem = `*CONFIRMAÇÃO DE PEDIDO* 🛒
+    const mensagem = `*CONFIRMAÇÃO DE PEDIDO*
 
 Olá! Gostaria de confirmar meu pedido:
 
@@ -871,7 +871,7 @@ function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
                 margin-bottom: 25px;
                 text-align: left;
             ">
-                <p style="margin: 0 0 10px 0; font-weight: bold;">📱 Próximo passo:</p>
+                <p style="margin: 0 0 10px 0; font-weight: bold;"> Próximo passo:</p>
                 <p style="margin: 0; font-size: 14px; color: #555;">
                     Clique no botão abaixo para confirmar via WhatsApp.
                 </p>
@@ -889,7 +889,7 @@ function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
                 font-weight: bold;
                 cursor: pointer;
             ">
-                💬 Confirmar via WhatsApp
+                 Confirmar via WhatsApp
             </button>
 
             <button class="btn-fechar-whatsapp" style="
@@ -921,12 +921,7 @@ function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('✅ DOM carregado');
-    
-    // Carrega produtos do MongoDB
     await carregarProdutosMongoDB();
-    
-    // Configurações
     configurarMascaras();
     configurarFormulario();
 });
@@ -1016,7 +1011,7 @@ function configurarFormulario() {
             const metodoPagamento = await escolherMetodoPagamento();
             
             if (metodoPagamento === 'pix') {
-                showNotification('💳 Processando pagamento...');
+                showNotification('Processando pagamento...');
                 const resultado = await criarPagamentoPix(customer, cart, total);
                 
                 if (resultado.success) {
@@ -1026,7 +1021,7 @@ function configurarFormulario() {
                     cart = [];
                     updateCart();
                 } else {
-                    alert('❌ Erro: ' + resultado.error);
+                    alert('Erro: ' + resultado.error);
                 }
             } else if (metodoPagamento === 'dinheiro') {
                 saveOrder(customer, cart, total, 'pending', Date.now());

@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
             });
         }
 
-        console.log(`🔍 Verificando pagamento: ${paymentId}`);
+        console.log(`Verificando pagamento: ${paymentId}`);
 
         const paymentInfo = await payment.get({ id: paymentId });
 
@@ -52,7 +52,7 @@ module.exports = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Erro ao verificar pagamento:', error);
+        console.error('Erro ao verificar pagamento:', error);
 
         return res.status(500).json({
             success: false,

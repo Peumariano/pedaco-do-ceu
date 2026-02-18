@@ -42,12 +42,12 @@ onAuthStateChanged(auth, async (user) => {
     if (user) {
         currentUser = user;
         currentToken = await user.getIdToken();
-        console.log('✅ Usuário logado:', user.displayName);
+        console.log('Usuário logado:', user.displayName);
         atualizarUI(user);
     } else {
         currentUser = null;
         currentToken = null;
-        console.log('👋 Usuário deslogado');
+        console.log('Usuário deslogado');
         mostrarBotaoLogin();
     }
 });
@@ -59,9 +59,9 @@ async function loginComGoogle() {
     try {
         const result = await signInWithPopup(auth, provider);
         currentToken = await result.user.getIdToken();
-        console.log('✅ Login realizado:', result.user.displayName);
+        console.log('Login realizado:', result.user.displayName);
     } catch (error) {
-        console.error('❌ Erro no login:', error);
+        console.error('Erro no login:', error);
         if (error.code !== 'auth/popup-closed-by-user') {
             alert('Erro ao fazer login. Tente novamente.');
         }
@@ -74,7 +74,7 @@ async function loginComGoogle() {
 async function logout() {
     try {
         await signOut(auth);
-        console.log('👋 Logout realizado');
+        console.log('Logout realizado');
     } catch (error) {
         console.error('Erro no logout:', error);
     }
@@ -140,4 +140,4 @@ window.firebaseAuth = {
     getCurrentUser: () => currentUser
 };
 
-console.log('🔐 Firebase Auth inicializado');
+console.log('Firebase Auth inicializado');

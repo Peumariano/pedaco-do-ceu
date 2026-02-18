@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     }
 
     try {
-        console.log('🔔 Webhook recebido do Mercado Pago');
+        console.log('Webhook recebido do Mercado Pago');
         console.log('Body:', req.body);
 
         const { type, data } = req.body;
@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
 
         // Processa notificação de pagamento
         if (type === 'payment' && data?.id) {
-            console.log(`💳 Processando notificação de pagamento: ${data.id}`);
+            console.log(`Processando notificação de pagamento: ${data.id}`);
 
             const paymentInfo = await payment.get({ id: data.id });
 
@@ -47,16 +47,16 @@ module.exports = async (req, res) => {
             }
 
             if (paymentInfo.status === 'rejected') {
-                console.log('❌ Pagamento rejeitado');
+                console.log('Pagamento rejeitado');
             }
 
             if (paymentInfo.status === 'cancelled') {
-                console.log('🚫 Pagamento cancelado');
+                console.log('Pagamento cancelado');
             }
         }
 
     } catch (error) {
-        console.error('❌ Erro ao processar webhook:', error);
+        console.error('Erro ao processar webhook:', error);
         // Não retorna erro 500 para não fazer o MP retentar
     }
 };

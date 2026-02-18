@@ -46,7 +46,7 @@ const authMiddleware = async (req, res, next) => {
                 avatar: decodedToken.picture || null
             });
             await user.save();
-            console.log('✅ Novo usuário criado:', user.email);
+            console.log('Novo usuário criado:', user.email);
         } else {
             // Atualiza último login
             await user.updateLastLogin();
@@ -57,7 +57,7 @@ const authMiddleware = async (req, res, next) => {
         next();
 
     } catch (error) {
-        console.error('❌ Erro na autenticação:', error.message);
+        console.error('Erro na autenticação:', error.message);
         return res.status(401).json({
             success: false,
             error: 'Token inválido ou expirado'

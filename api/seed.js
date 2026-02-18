@@ -67,24 +67,24 @@ module.exports = async (req, res) => {
         ];
 
         // LIMPA O BANCO (cuidado em produção!)
-        console.log('🗑️ Limpando produtos existentes...');
+        console.log('Limpando produtos existentes...');
         await Product.deleteMany({});
 
         // INSERE OS PRODUTOS
-        console.log('📦 Inserindo produtos...');
+        console.log('Inserindo produtos...');
         const inserted = await Product.insertMany(brigadeiros);
 
-        console.log(`✅ ${inserted.length} produtos inseridos com sucesso!`);
+        console.log(`${inserted.length} produtos inseridos com sucesso!`);
 
         res.status(200).json({ 
             success: true, 
-            message: `✅ ${inserted.length} produtos inseridos no MongoDB!`,
+            message: `${inserted.length} produtos inseridos no MongoDB!`,
             count: inserted.length,
             products: inserted.map(p => ({ name: p.name, category: p.category }))
         });
 
     } catch (error) {
-        console.error('❌ Erro ao popular banco:', error);
+        console.error('Erro ao popular banco:', error);
         res.status(500).json({ 
             success: false, 
             error: error.message,

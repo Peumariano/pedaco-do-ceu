@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
     }
 
     try {
-        console.log('📦 Nova solicitação de pagamento');
+        console.log('Nova solicitação de pagamento');
 
         const { amount, description, customer, items, orderId } = req.body;
 
@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
 
         const paymentData = {
             transaction_amount: parseFloat(amount),
-            description: description || 'Pedido Brigaderia Delícia',
+            description: description || 'Pedido Pedaço do Céu',
             payment_method_id: 'pix',
             payer: {
                 email: customer.email,
@@ -59,11 +59,11 @@ module.exports = async (req, res) => {
             }
         };
 
-        console.log('💳 Criando pagamento no Mercado Pago...');
+        console.log('Criando pagamento no Mercado Pago...');
 
         const response = await payment.create({ body: paymentData });
 
-        console.log('✅ Pagamento criado:', response.id);
+        console.log('Pagamento criado:', response.id);
 
         return res.status(200).json({
             success: true,
@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Erro:', error);
+        console.error('Erro:', error);
         return res.status(500).json({
             success: false,
             error: 'Erro ao processar pagamento',
