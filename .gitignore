@@ -5,3 +5,6 @@ node_modules/
 *.log
 .DS_Store
 .env*.local
+public/js/auth.js
+firebase-adminsdk-*.json
+

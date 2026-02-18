@@ -12,8 +12,8 @@ const firebaseConfig = {
   projectId: "pedaco-do-ceu",
   storageBucket: "pedaco-do-ceu.firebasestorage.app",
   messagingSenderId: "26816712946",
-  appId: "1:26816712946:web:550fe9d5a23d65a5fa806b",
-  measurementId: "G-T1F6KEF9R6"
+  appId: "1:26816712946:web:9f351192e32d93c3fa806b",
+  measurementId: "G-WG1CHW8P7L"
 };
 
 // Initialize Firebase
