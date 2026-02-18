@@ -8,160 +8,61 @@ const EMAILJS_CONFIG = {
     templateId: "template_7o5c8rc"
 };
 
-// Base de dados dos produtos
-const products = [
-    {
-        id: 1,
-        name: "Brigadeiro Tradicional",
-        category: "tradicional",
-        description: "O clássico brigadeiro de chocolate granulado",
-        price: 3.50,
-        image: "assets/brigadeiro-tradicional.png"
-    },
-    {
-        id: 2,
-        name: "Brigadeiro de Beijinho",
-        category: "tradicional",
-        description: "Brigadeiro com sabor de prestigio",
-        price: 3.50,
-        image: "assets/brigadeiro-beijinho.png"
-    },
-    {
-        id: 3,
-        name: "Brigadeiro de Ninho",
-        category: "tradicional",
-        description: "Feito com leite ninho original e cobertura especial",
-        price: 3.50,
-        image: "assets/brigadeiro-ninho.png"
-    },
-    {
-        id: 4,
-        name: "Brigadeiro de Coco queimado",
-        category: "tradicional",
-        description: "Brigadeiro com sabor de coco queimado",
-        price: 3.50,
-        image: "assets/brigadeiro-coco-queimado.png"
-    },
-    {
-        id: 5,
-        name: "Bicho de Pé",
-        category: "especial",
-        description: "Sabor sofisticado de morango nesquik",
-        price: 3.50,
-        image: "assets/brigadeiro-morango.png"
-    },
-    {
-        id: 6,
-        name: "Brigadeiro de Paçoca",
-        category: "especial",
-        description: "Sabor de paçoca em formato de brigadeiro",
-        price: 3.50,
-        image: "assets/brigadeiro-pacoca.png"
-    },
-    {
-        id: 7,
-        name: "Brigadeiro de Limão",
-        category: "especial",
-        description: "Refrescante brigadeiro de limão, feito com a própria fruta",
-        price: 3.50,
-        image: "assets/brigadeiro-limao.png"
-    },
-    {
-        id: 8,
-        name: "Brigadeiro de Amendoim",
-        category: "especial",
-        description: "Massa cremosa de amendoim",
-        price: 3.50,
-        image: "assets/brigadeiro-amendoim.png"
-    },
-    {
-        id: 9,
-        name: "Brigadeiro Ferrero Rocher",
-        category: "diferente",
-        description: "Cremoso brigadeiro tradicional com amendoim",
-        price: 3.50,
-        image: "assets/brigadeiro-charge.png"
-    },
-    {
-        id: 10,
-        name: "Brigadeiro de Oreo",
-        category: "diferente",
-        description: "Brigadeiro com pedaços de Oreo",
-        price: 5.50,
-        image: "assets/brigadeiro-oreo.png"
-    },
-    {
-        id: 11,
-        name: "Brigadeiro Casadinho",
-        category: "diferente",
-        description: "Cremoso brigadeiro preto e ninho",
-        price: 3.50,
-        image: "assets/brigadeiro-casadinho.png"
-    },
-    {
-        id: 12,
-        name: "Brigadeiro M&M",
-        category: "diferente",
-        description: "Brigadeiro tradicional com M&M",
-        price: 3.50,
-        image: "assets/brigadeiro-M&M.png"
-    },
-
-    {
-        id: 13,
-        name: "Caixa de Brigadeiro",
-        category: "Caixas",
-        description: "Brigadeiros personalizados",
-        price: 42.00,
-        image: "assets/caixa-brigadeiro.png"
-    },
-    {
-        id: 14,
-        name: "Caixa com 4 brigadeiros",
-        category: "Caixas",
-        description: "Caixa com 4 brigadeiros a sua escolha",
-        price: 14.00,
-        image: "assets/caixa-brigadeiro2.png"
-    },
-    {
-        id: 15,
-        name: "Coxinha de Morango",
-        category: "diferente",
-        description: "Coxinha de morango em formato de coração",
-        price: 15.00,
-        image: "assets/coxinha-morango.png"
-    },
-     {
-        id: 16,
-        name: "Coxinha de Morango",
-        category: "diferente",
-        description: "Coxinha de morango",
-        price: 12.00,
-        image: "assets/coxinha-morango2.png"
-    },  
-    {
-        id: 16,
-        name: "Coxinha de Morango de Ninho",
-        category: "diferente",
-        description: "Coxinha de morango em formato de coração com sabor ninho",
-        price: 15.00,
-        image: "assets/coxinha-morango-ninho.png"
-    },
-     {
-        id: 17,
-        name: "Coxinha de Morango de Ninho",
-        category: "diferente",
-        description: "Coxinha de morango com sabor ninho",
-        price: 12.00,
-        image: "assets/coxinha-morango-ninho2.png"
-    }
-
-  
-];
+// ============================================
+// CARREGAR PRODUTOS DO MONGODB
+// ============================================
+let products = []; // Array que vai receber os produtos do MongoDB
 let cart = [];
+
+async function carregarProdutosMongoDB(categoria = 'todos') {
+    try {
+        console.log('📦 Buscando produtos do MongoDB...');
+        
+        const url = categoria === 'todos'
+            ? '/api/products'
+            : `/api/products?category=${categoria}`;
+
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error('Erro ao buscar produtos');
+        }
+        
+        const data = await response.json();
+
+        if (data.success && data.products) {
+            console.log(`✅ ${data.products.length} produtos carregados do MongoDB`);
+            
+            // IMPORTANTE: Transforma os produtos do MongoDB no formato correto
+            products = data.products.map(p => ({
+                id: p._id,  // MongoDB usa _id
+                name: p.name,
+                category: p.category,
+                description: p.description,
+                price: p.price,
+                image: p.image
+            }));
+            
+            renderProducts(products);
+            return products;
+        } else {
+            throw new Error('Dados inválidos');
+        }
+
+    } catch (error) {
+        console.error('❌ Erro ao carregar produtos:', error);
+        showNotification('⚠️ Erro ao carregar produtos. Tente recarregar a página.');
+        return [];
+    }
+}
 
 function renderProducts(productsToRender = products) {
     const productsGrid = document.getElementById('products-grid');
+    
+    if (!productsGrid) {
+        console.error('products-grid não encontrado');
+        return;
+    }
     
     productsGrid.innerHTML = productsToRender.map(product => `
         <div class="product-card" data-category="${product.category}">
@@ -174,7 +75,7 @@ function renderProducts(productsToRender = products) {
                 <p class="product-description">${product.description}</p>
                 <div class="product-footer">
                     <span class="product-price">R$ ${product.price.toFixed(2)}</span>
-                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                    <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">
                         Adicionar
                     </button>
                 </div>
@@ -184,7 +85,14 @@ function renderProducts(productsToRender = products) {
 }
 
 function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => p.id === productId || p.id === String(productId));
+    
+    if (!product) {
+        console.error('Produto não encontrado:', productId);
+        showNotification('❌ Erro ao adicionar produto');
+        return;
+    }
+    
     const existingItem = cart.find(item => item.id === productId);
     
     if (existingItem) {
@@ -197,7 +105,7 @@ function addToCart(productId) {
     }
     
     updateCart();
-    showNotification('Produto adicionado a sacola!');
+    showNotification('Produto adicionado à sacola!');
 }
 
 function updateCart() {
@@ -205,13 +113,13 @@ function updateCart() {
     const cartCount = document.querySelector('.cart-count');
     const cartTotal = document.getElementById('cart-total');
     
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartCount.textContent = totalItems;
-
     if (!cartItems || !cartCount || !cartTotal) {
         console.error('Elementos da sacola não encontrados');
         return;
     }
+    
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = totalItems;
     
     if (cart.length === 0) {
         cartItems.innerHTML = '<p class="empty-cart">Seu carrinho está vazio</p>';
@@ -228,12 +136,12 @@ function updateCart() {
                 <div class="cart-item-name">${item.name}</div>
                 <div class="cart-item-price">R$ ${item.price.toFixed(2)}</div>
                 <div class="cart-item-quantity">
-                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                    <button class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
                     <span>${item.quantity}</span>
-                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                    <button class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
                 </div>
             </div>
-            <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+            <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">
                 Remover
             </button>
         </div>
@@ -271,19 +179,13 @@ function toggleCart() {
     overlay.classList.toggle('active');
 }
 
-function filterProducts(category, element) {
+async function filterProducts(category, element) {
     const buttons = document.querySelectorAll('.filter-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
     if (element) element.classList.add('active');
     
-    if (category === 'todos') {
-        renderProducts(products);
-    } else {
-        const filtered = products.filter(p => p.category === category);
-        renderProducts(filtered);
-    }
+    await carregarProdutosMongoDB(category);
 }
-
 
 function checkout() {
     if (cart.length === 0) {
@@ -344,173 +246,14 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Carrega produtos do MongoDB quando a página carregar
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('✅ DOM carregado');
-    
-    // Carrega produtos do MongoDB
-    await carregarProdutosMongoDB();
-    
-    // Configurações de máscaras e formulário
-    configurarMascaras();
-    configurarFormulario();
-});
-
-// ============================================
-// Função para carregar produtos do MongoDB
-// ============================================
-async function carregarProdutosMongoDB(categoria = 'todos') {
-    try {
-        console.log('📦 Buscando produtos do MongoDB...');
-        
-        const url = categoria === 'todos'
-            ? '/api/products'
-            : `/api/products?category=${categoria}`;
-
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error('Erro ao buscar produtos');
-        }
-        
-        const data = await response.json();
-
-        if (data.success && data.products) {
-            console.log(`✅ ${data.products.length} produtos carregados do MongoDB`);
-            renderProducts(data.products);
-            return data.products;
-        } else {
-            throw new Error('Dados inválidos');
-        }
-
-    } catch (error) {
-        console.error('❌ Erro ao carregar produtos:', error);
-        console.log('⚠️ Usando produtos do array local como fallback');
-        renderProducts(products);
-        showNotification('⚠️ Alguns produtos podem não estar disponíveis');
-        return products;
-    }
-}
-
-// ============================================
-// Atualizar função de filtro
-// ============================================
-async function filterProducts(category, element) {
-    const buttons = document.querySelectorAll('.filter-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    if (element) element.classList.add('active');
-    
-    await carregarProdutosMongoDB(category);
-}
-
-// ============================================
-// Mover configurações para funções separadas
-// ============================================
-function configurarMascaras() {
-    const cepInput = document.getElementById('cep');
-    if (cepInput) {
-        cepInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 5) {
-                value = value.slice(0, 5) + '-' + value.slice(5, 8);
-            }
-            e.target.value = value;
-            if (value.replace(/\D/g, '').length === 8) {
-                searchCEP(value);
-            }
-        });
-    }
-
-    const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 10) {
-                value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
-            } else if (value.length > 6) {
-                value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
-            } else if (value.length > 2) {
-                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-            } else {
-                value = value.replace(/^(\d*)/, '($1');
-            }
-            e.target.value = value;
-        });
-    }
-    
-    const cpfInput = document.getElementById('cpf');
-    if (cpfInput) {
-        cpfInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 11) {
-                value = value.slice(0, 11);
-            }
-            if (value.length > 9) {
-                value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
-            } else if (value.length > 6) {
-                value = value.replace(/^(\d{3})(\d{3})(\d{1,3})$/, '$1.$2.$3');
-            } else if (value.length > 3) {
-                value = value.replace(/^(\d{3})(\d{1,3})$/, '$1.$2');
-            }
-            e.target.value = value;
-        });
-    }
-}
-
-function configurarFormulario() {
-    const form = document.getElementById('checkout-form');
-    if (form) {
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            
-            const customer = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                cpf: formData.get('cpf'),
-                address: {
-                    cep: formData.get('cep'),
-                    street: formData.get('street'),
-                    number: formData.get('number'),
-                    complement: formData.get('complement'),
-                    neighborhood: formData.get('neighborhood'),
-                    city: formData.get('city'),
-                    state: formData.get('state')
-                },
-                observations: formData.get('observations')
-            };
-            
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const metodoPagamento = await escolherMetodoPagamento();
-            
-            if (metodoPagamento === 'pix') {
-                showNotification('💳 Processando pagamento...');
-                const resultado = await criarPagamentoPix(customer, cart, total);
-                
-                if (resultado.success) {
-                    saveOrder(customer, cart, total, 'pending_payment', resultado.orderId);
-                    mostrarModalPix(resultado.payment);
-                    closeCheckout();
-                    cart = [];
-                    updateCart();
-                } else {
-                    alert('❌ Erro ao processar pagamento: ' + resultado.error);
-                }
-            } else if (metodoPagamento === 'dinheiro') {
-                saveOrder(customer, cart, total, 'pending', Date.now());
-                showOrderConfirmation(customer, total, cart);
-                cart = [];
-                updateCart();
-                closeCheckout();
-            }
-        });
-    }
-}
-
+// ===== CHECKOUT =====
 
 function openCheckout() {
+    if (cart.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+    }
+    
     const modal = document.getElementById('checkout-modal');
     const checkoutItems = document.getElementById('checkout-items');
     const checkoutTotal = document.getElementById('checkout-total-value');
@@ -556,23 +299,6 @@ function loadCustomerData() {
     }
 }
 
-function saveCustomerData(formData) {
-    const customer = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        cep: formData.get('cep'),
-        street: formData.get('street'),
-        number: formData.get('number'),
-        complement: formData.get('complement'),
-        neighborhood: formData.get('neighborhood'),
-        city: formData.get('city'),
-        state: formData.get('state')
-    };
-    
-    localStorage.setItem('customerData', JSON.stringify(customer));
-}
-
 async function searchCEP(cep) {
     cep = cep.replace(/\D/g, '');
     
@@ -599,127 +325,7 @@ async function searchCEP(cep) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM carregado');
-    
-    const cepInput = document.getElementById('cep');
-    if (cepInput) {
-        cepInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            
-            if (value.length > 5) {
-                value = value.slice(0, 5) + '-' + value.slice(5, 8);
-            }
-            
-            e.target.value = value;
-            
-            if (value.replace(/\D/g, '').length === 8) {
-                searchCEP(value);
-            }
-        });
-    }
-
-    const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            
-            if (value.length > 10) {
-                value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
-            } else if (value.length > 6) {
-                value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
-            } else if (value.length > 2) {
-                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-            } else {
-                value = value.replace(/^(\d*)/, '($1');
-            }
-            
-            e.target.value = value;
-        });
-    }
-
-
-    document.getElementById('checkout-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    
-    const customer = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        cpf: formData.get('cpf'),
-        address: {
-            cep: formData.get('cep'),
-            street: formData.get('street'),
-            number: formData.get('number'),
-            complement: formData.get('complement'),
-            neighborhood: formData.get('neighborhood'),
-            city: formData.get('city'),
-            state: formData.get('state')
-        },
-        observations: formData.get('observations')
-    };
-    
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    const metodoPagamento = await escolherMetodoPagamento();
-    
-    if (metodoPagamento === 'pix') {
-        
-        showNotification('💳 Processando pagamento...');
-        
-        
-        const resultado = await criarPagamentoPix(customer, cart, total);
-        
-        if (resultado.success) {
-            saveOrder(customer, cart, total, 'pending_payment', resultado.orderId);
-       
-            mostrarModalPix(resultado.payment);
-           
-            closeCheckout();
-          
-            cart = [];
-            updateCart();
-            
-        } else {
-            alert('❌ Erro ao processar pagamento: ' + resultado.error);
-        }
-        
-    } else if (metodoPagamento === 'dinheiro') {
-        saveOrder(customer, cart, total, 'pending', Date.now());
-       
-        showOrderConfirmation(customer, total, cart);
-       
-        cart = [];
-        updateCart();
-      
-        closeCheckout();
-    }
-    })
-
-    
-    document.getElementById('cpf').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        
-        if (value.length > 11) {
-            value = value.slice(0, 11);
-        }
-        
-        if (value.length > 9) {
-            value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
-        } else if (value.length > 6) {
-            value = value.replace(/^(\d{3})(\d{3})(\d{1,3})$/, '$1.$2.$3');
-        } else if (value.length > 3) {
-            value = value.replace(/^(\d{3})(\d{1,3})$/, '$1.$2');
-        }
-        
-        e.target.value = value;
-    });
-
-});
-
-
+// ===== ESCOLHER MÉTODO DE PAGAMENTO =====
 function escolherMetodoPagamento() {
     return new Promise((resolve) => {
         const modal = document.createElement('div');
@@ -747,9 +353,9 @@ function escolherMetodoPagamento() {
                 padding: 40px;
                 text-align: center;
             ">
-                <h2 style="margin: 0 0 20px 0; color: #62001f3;">Como deseja pagar?</h2>
+                <h2 style="margin: 0 0 20px 0; color: #62001f;">Como deseja pagar?</h2>
 
-                <button onclick="selecionarPagamento('pix')" style="
+                <button class="btn-pix" style="
                     width: 100%;
                     padding: 20px;
                     margin: 10px 0;
@@ -768,7 +374,7 @@ function escolherMetodoPagamento() {
                     💳 Pix (Pagamento Instantâneo)
                 </button>
 
-                <button onclick="selecionarPagamento('dinheiro')" style="
+                <button class="btn-dinheiro" style="
                     width: 100%;
                     padding: 20px;
                     margin: 10px 0;
@@ -791,14 +397,18 @@ function escolherMetodoPagamento() {
 
         document.body.appendChild(modal);
 
-        window.selecionarPagamento = function(metodo) {
+        // Event listeners (não usa onclick inline)
+        modal.querySelector('.btn-pix').addEventListener('click', () => {
             modal.remove();
-            delete window.selecionarPagamento;
-            resolve(metodo);
-        };
+            resolve('pix');
+        });
+
+        modal.querySelector('.btn-dinheiro').addEventListener('click', () => {
+            modal.remove();
+            resolve('dinheiro');
+        });
     });
 }
-
 
 function saveOrder(customer, items, total, status = 'pending', orderId = null) {
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
@@ -817,65 +427,14 @@ function saveOrder(customer, items, total, status = 'pending', orderId = null) {
     localStorage.setItem('orders', JSON.stringify(orders));
 }
 
-
-
 function showOrderConfirmation(customer, total, items) {
     console.log('✅ Processando pedido...');
     
     const orderId = `ORD-${Date.now()}`;
     
-    // Salva pedido
     saveOrder(customer, items, total, 'pending', orderId);
-    
-    // Envia email
     enviarEmailConfirmacao(customer, total, items);
-    
-    // NOVO: Modal WhatsApp
     enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId);
-}
-
-
-function montarMensagemWhatsApp(customer, total, items) {
-    let message = `NOVO PEDIDO - Pedaço do Céu\n\n`;
-    message += `    DADOS DO CLIENTE\n`;
-    message += `Nome: ${customer.name}\n`;
-    message += `E-mail: ${customer.email}\n`;
-    message += `Telefone: ${customer.phone}\n\n`;
-    
-    message += ` ITENS DO PEDIDO\n`;
-    items.forEach(item => {
-        message += `• ${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}\n`;
-    });
-    
-    message += `*TOTAL: R$ ${total.toFixed(2)}*\n\n`;
-    
-    message += `ENDEREÇO PARA ENTREGA\n`;
-    message += `${customer.address.street}, ${customer.address.number}`;
-    if (customer.address.complement) {
-        message += ` - ${customer.address.complement}`;
-    }
-    message += `\n${customer.address.neighborhood}\n`;
-    message += `${customer.address.city}/${customer.address.state}\n`;
-    message += `CEP: ${customer.address.cep}\n\n`;
-    
-    if (customer.observations) {
-        message += `OBSERVAÇÕES\n${customer.observations}\n\n`;
-    }
-    
-    message += `*Pedido confirmado!*\n`;
-    message += `Aguardando cálculo do frete para o endereço informado.\n`;
-    message += `Em breve entraremos em contato!`;
-    
-    return message;
-}
-
-function enviarParaWhatsApp(message) {
-    const mensagemCodificada = encodeURIComponent(message);
-    const urlWhatsApp = `https://wa.me/${WHATSAPP_LOJA}?text=${mensagemCodificada}`;
-    
-    setTimeout(() => {
-        window.open(urlWhatsApp, '_blank');
-    }, 1000);
 }
 
 function enviarEmailConfirmacao(customer, total, items) {
@@ -891,7 +450,6 @@ function enviarEmailConfirmacao(customer, total, items) {
         return;
     }
     
-    // Monta lista de produtos em HTML
     let order_items_html = '';
     items.forEach(item => {
         order_items_html += `
@@ -904,10 +462,8 @@ function enviarEmailConfirmacao(customer, total, items) {
         `;
     });
     
-    // Endereço completo
     const delivery_address = `${customer.address.street}, ${customer.address.number}${customer.address.complement ? ' - ' + customer.address.complement : ''}, ${customer.address.neighborhood}, ${customer.address.city}/${customer.address.state} - CEP: ${customer.address.cep}`;
     
-    // Parâmetros do template
     const templateParams = {
         customer_name: customer.name,
         customer_email: customer.email,
@@ -920,9 +476,6 @@ function enviarEmailConfirmacao(customer, total, items) {
         order_number: Date.now()
     };
     
-    console.log('🚀 Enviando email...');
-    
-    // Envia
     emailjs.send(
         EMAILJS_CONFIG.serviceId,
         EMAILJS_CONFIG.templateId,
@@ -934,20 +487,19 @@ function enviarEmailConfirmacao(customer, total, items) {
         },
         function(error) {
             console.error('❌ Erro:', error);
-            showNotification('⚠️ Erro ao enviar email');
         }
     );
 }
 
-
-const API_URL = ''; 
+// ===== MERCADO PAGO =====
+const API_URL = '';
 
 async function criarPagamentoPix(customer, items, total) {
     try {
         console.log('💳 Criando pagamento Pix...');
-            
+        
         const orderId = `ORD-${Date.now()}`;
-       
+        
         const descricao = items.map(item => 
             `${item.quantity}x ${item.name}`
         ).join(', ');
@@ -1020,8 +572,6 @@ async function verificarStatusPagamento(paymentId) {
     }
 }
 
-
-
 function mostrarModalPix(paymentData) {
     const modalExistente = document.getElementById('modal-pix');
     if (modalExistente) {
@@ -1055,7 +605,6 @@ function mostrarModalPix(paymentData) {
             overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         ">
-            <!-- Header -->
             <div style="
                 background: linear-gradient(135deg, #62001f 0%, #a02b52 100%);
                 color: white;
@@ -1067,11 +616,7 @@ function mostrarModalPix(paymentData) {
                 <p style="margin: 10px 0 0 0; opacity: 0.9;">Escaneie o QR Code para pagar</p>
             </div>
 
-            <!-- Body -->
             <div style="padding: 30px; text-align: center;">
-                
-
-                <!-- Valor -->
                 <div style="margin-bottom: 20px;">
                     <div style="font-size: 14px; color: #666; margin-bottom: 5px;">Valor a pagar:</div>
                     <div style="font-size: 32px; font-weight: bold; color: #8b4513;">
@@ -1079,14 +624,12 @@ function mostrarModalPix(paymentData) {
                     </div>
                 </div>
 
-                <!-- QR Code -->
                 <div style="margin-bottom: 20px;">
                     <img src="data:image/png;base64,${paymentData.qrCodeBase64}" 
                          alt="QR Code Pix" 
                          style="width: 280px; height: 280px; border: 2px solid #ddd; border-radius: 10px;">
                 </div>
 
-                    <!-- Status -->
                 <div id="pix-status" style="
                     padding: 15px;
                     background: #f1f49625;
@@ -1098,7 +641,6 @@ function mostrarModalPix(paymentData) {
                     ⏳ Aguardando pagamento...
                 </div>
 
-                <!-- Código Pix Copia e Cola -->
                 <div style="margin-bottom: 20px;">
                     <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
                         Ou copie o código Pix:
@@ -1115,12 +657,7 @@ function mostrarModalPix(paymentData) {
                     ">
                         ${paymentData.qrCode}
                     </div>
-                    <button
-                    onclick="copiarCodigoPix('${paymentData.qrCode}')"
-                    onmouseover="this.style.background='#fff'; this.style.color='#a02b52'; this.style.border='1px solid #62001f'; this.style.transform='scale(1.01)'" 
-                    onmouseout="this.style.background='#a02b52'; this.style.color='#fff'; this.style.transform='scale(1)'"
-                    
-                    style="
+                    <button class="btn-copiar-pix" style="
                         background: #a02b52;
                         color: white;
                         border: 1px solid #62001f;
@@ -1130,14 +667,11 @@ function mostrarModalPix(paymentData) {
                         font-size: 14px;
                         font-weight: 600;
                         transition: all .4s ease;
-                        "
-                        
-                        >
+                    ">
                         Copiar Código Pix
                     </button>
                 </div>
 
-                <!-- Instruções -->
                 <div style="
                     background: #e8f5e9;
                     padding: 15px;
@@ -1156,8 +690,7 @@ function mostrarModalPix(paymentData) {
                     </ol>
                 </div>
 
-                <!-- Botão Fechar -->
-                <button onclick="fecharModalPix()" style="
+                <button class="btn-fechar-pix" style="
                     background: #e0e0e0;
                     color: #333;
                     border: none;
@@ -1171,13 +704,21 @@ function mostrarModalPix(paymentData) {
                     Fechar
                 </button>
 
-                <!-- Payment ID (oculto para referência) -->
                 <input type="hidden" id="current-payment-id" value="${paymentData.id}">
             </div>
         </div>
     `;
 
     document.body.appendChild(modal);
+
+    // Event listeners
+    modal.querySelector('.btn-copiar-pix').addEventListener('click', () => {
+        copiarCodigoPix(paymentData.qrCode);
+    });
+
+    modal.querySelector('.btn-fechar-pix').addEventListener('click', () => {
+        fecharModalPix();
+    });
 
     iniciarVerificacaoPagamento(paymentData.id);
 }
@@ -1186,7 +727,6 @@ function copiarCodigoPix(codigo) {
     navigator.clipboard.writeText(codigo).then(() => {
         alert('✅ Código Pix copiado! Cole no app do seu banco.');
     }).catch(err => {
-        console.error('Erro ao copiar:', err);
         const input = document.createElement('input');
         input.value = codigo;
         document.body.appendChild(input);
@@ -1207,9 +747,8 @@ function fecharModalPix() {
     }
 }
 
-
 function iniciarVerificacaoPagamento(paymentId) {
-    console.log('🔄 Iniciando verificação automática do pagamento...');
+    console.log('🔄 Iniciando verificação automática...');
     
     if (window.verificacaoInterval) {
         clearInterval(window.verificacaoInterval);
@@ -1219,8 +758,6 @@ function iniciarVerificacaoPagamento(paymentId) {
         const payment = await verificarStatusPagamento(paymentId);
         
         if (payment) {
-            console.log('Status atual:', payment.status);
-            
             const statusDiv = document.getElementById('pix-status');
             
             if (payment.status === 'approved') {
@@ -1235,7 +772,9 @@ function iniciarVerificacaoPagamento(paymentId) {
                 
                 setTimeout(() => {
                     fecharModalPix();
-                    mostrarConfirmacaoPagamento();
+                    alert('🎉 Pagamento aprovado! Seu pedido foi confirmado.');
+                    cart = [];
+                    updateCart();
                 }, 2000);
             }
             
@@ -1255,23 +794,12 @@ function iniciarVerificacaoPagamento(paymentId) {
     setTimeout(() => {
         if (window.verificacaoInterval) {
             clearInterval(window.verificacaoInterval);
-            console.log('⏱️ Timeout: Verificação automática encerrada');
         }
     }, 600000);
 }
 
-
-function mostrarConfirmacaoPagamento() {
-    alert('🎉 Pagamento aprovado com sucesso!\n\nSeu pedido foi confirmado e já está sendo preparado.\n\nEm breve você receberá uma confirmação por email e WhatsApp.');
-
-    cart = [];
-    updateCart();
-}
-
-
-
+// ===== WHATSAPP =====
 function enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId) {
-    // Monta mensagem que o CLIENTE vai enviar para VOCÊ
     const mensagem = `*CONFIRMAÇÃO DE PEDIDO* 🛒
 
 Olá! Gostaria de confirmar meu pedido:
@@ -1294,18 +822,12 @@ CEP: ${customer.address.cep}
 
 ${customer.observations ? `Observações: ${customer.observations}` : ''}
 
-Aguardo confirmação do pedido e informações sobre entrega!`;
+Aguardo confirmação do pedido!`;
 
-    // Número da LOJA (você)
-    const numeroLoja = WHATSAPP_LOJA; // Já está configurado: "11991084308"
-    
-    // Codifica mensagem
+    const numeroLoja = WHATSAPP_LOJA;
     const mensagemCodificada = encodeURIComponent(mensagem);
-    
-    // URL do WhatsApp Web/App
     const urlWhatsApp = `https://wa.me/${numeroLoja}?text=${mensagemCodificada}`;
     
-    // Mostra modal perguntando se quer confirmar
     mostrarModalConfirmacaoWhatsApp(urlWhatsApp, customer.name);
 }
 
@@ -1351,12 +873,11 @@ function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
             ">
                 <p style="margin: 0 0 10px 0; font-weight: bold;">📱 Próximo passo:</p>
                 <p style="margin: 0; font-size: 14px; color: #555;">
-                    Clique no botão abaixo para enviar a confirmação do seu pedido 
-                    via WhatsApp. Uma mensagem já estará pronta, você só precisa clicar em "Enviar".
+                    Clique no botão abaixo para confirmar via WhatsApp.
                 </p>
             </div>
 
-            <button onclick="window.open('${urlWhatsApp}', '_blank'); fecharModalWhatsAppConfirmacao();" style="
+            <button class="btn-whatsapp" style="
                 width: 100%;
                 padding: 18px;
                 margin-bottom: 10px;
@@ -1367,16 +888,11 @@ function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
                 font-size: 18px;
                 font-weight: bold;
                 cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
             ">
-                <span style="font-size: 24px;">💬</span>
-                Confirmar via WhatsApp
+                💬 Confirmar via WhatsApp
             </button>
 
-            <button onclick="fecharModalWhatsAppConfirmacao()" style="
+            <button class="btn-fechar-whatsapp" style="
                 width: 100%;
                 padding: 12px;
                 border: 1px solid #ddd;
@@ -1388,38 +904,137 @@ function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
             ">
                 Fechar
             </button>
-
-            <p style="margin: 20px 0 0 0; font-size: 12px; color: #999;">
-                💡 Você também receberá um email de confirmação
-            </p>
         </div>
     `;
 
     document.body.appendChild(modal);
+
+    modal.querySelector('.btn-whatsapp').addEventListener('click', () => {
+        window.open(urlWhatsApp, '_blank');
+        modal.remove();
+    });
+
+    modal.querySelector('.btn-fechar-whatsapp').addEventListener('click', () => {
+        modal.remove();
+    });
 }
 
-function fecharModalWhatsAppConfirmacao() {
-    const modal = document.getElementById('modal-whatsapp-confirmacao');
-    if (modal) {
-        modal.remove();
+// ===== INICIALIZAÇÃO =====
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('✅ DOM carregado');
+    
+    // Carrega produtos do MongoDB
+    await carregarProdutosMongoDB();
+    
+    // Configurações
+    configurarMascaras();
+    configurarFormulario();
+});
+
+function configurarMascaras() {
+    const cepInput = document.getElementById('cep');
+    if (cepInput) {
+        cepInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.slice(0, 5) + '-' + value.slice(5, 8);
+            }
+            e.target.value = value;
+            if (value.replace(/\D/g, '').length === 8) {
+                searchCEP(value);
+            }
+        });
+    }
+
+    const phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+            } else {
+                value = value.replace(/^(\d*)/, '($1');
+            }
+            e.target.value = value;
+        });
+    }
+    
+    const cpfInput = document.getElementById('cpf');
+    if (cpfInput) {
+        cpfInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) {
+                value = value.slice(0, 11);
+            }
+            if (value.length > 9) {
+                value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{3})(\d{3})(\d{1,3})$/, '$1.$2.$3');
+            } else if (value.length > 3) {
+                value = value.replace(/^(\d{3})(\d{1,3})$/, '$1.$2');
+            }
+            e.target.value = value;
+        });
     }
 }
 
-
-function showOrderConfirmation(customer, total, items) {
-    console.log('✅ Processando pedido...');
-    
-    const orderId = `ORD-${Date.now()}`;
-    
-    // Salva pedido
-    saveOrder(customer, items, total, 'pending', orderId);
-    
-    // Envia email (mantém como está)
-    enviarEmailConfirmacao(customer, total, items);
-    
-    // NOVA FUNÇÃO: Mostra modal para cliente confirmar via WhatsApp
-    enviarConfirmacaoWhatsAppCliente(customer, items, total, orderId);
-    
-    // Notificação
-    showNotification('Pedido registrado! Confirme via WhatsApp.');
+function configurarFormulario() {
+    const form = document.getElementById('checkout-form');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
+            }
+            
+            const formData = new FormData(e.target);
+            
+            const customer = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                cpf: formData.get('cpf'),
+                address: {
+                    cep: formData.get('cep'),
+                    street: formData.get('street'),
+                    number: formData.get('number'),
+                    complement: formData.get('complement'),
+                    neighborhood: formData.get('neighborhood'),
+                    city: formData.get('city'),
+                    state: formData.get('state')
+                },
+                observations: formData.get('observations')
+            };
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const metodoPagamento = await escolherMetodoPagamento();
+            
+            if (metodoPagamento === 'pix') {
+                showNotification('💳 Processando pagamento...');
+                const resultado = await criarPagamentoPix(customer, cart, total);
+                
+                if (resultado.success) {
+                    saveOrder(customer, cart, total, 'pending_payment', resultado.orderId);
+                    mostrarModalPix(resultado.payment);
+                    closeCheckout();
+                    cart = [];
+                    updateCart();
+                } else {
+                    alert('❌ Erro: ' + resultado.error);
+                }
+            } else if (metodoPagamento === 'dinheiro') {
+                saveOrder(customer, cart, total, 'pending', Date.now());
+                showOrderConfirmation(customer, total, cart);
+                cart = [];
+                updateCart();
+                closeCheckout();
+            }
+        });
+    }
 }

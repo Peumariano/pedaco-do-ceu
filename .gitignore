@@ -7,4 +7,4 @@ node_modules/
 .env*.local
 public/js/auth.js
 firebase-adminsdk-*.json
-
+test.js
