@@ -92,6 +92,16 @@ header.scrolled {
     text-transform: none;
     transition: all 0.3s var(--ease-smooth);
 }
+.logo-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    background: white;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 
 .logo:hover {
     color: var(--color-chocolate-medium);
