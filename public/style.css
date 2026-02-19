@@ -294,7 +294,7 @@ header .container {
 
 .product-card {
     border-radius: 15px;
-    background-color: #229954;
+    background-color: #fffdf9;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
@@ -329,7 +329,7 @@ header .container {
 
 .product-category {
     font-size: 12px;
-    color: #62001f;
+    color: #4A2C2A;
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 1px;
@@ -339,7 +339,7 @@ header .container {
 .product-name {
     font-size: 20px;
     font-weight: 600;
-    color: #333;
+    color: #fffdf9;
     margin-bottom: 8px;
 }
 
@@ -359,11 +359,11 @@ header .container {
 .product-price {
     font-size: 24px;
     font-weight: bold;
-    color: #62001f;
+    color: #4A2C2A;
 }
 
 .add-to-cart-btn {
-    background: #62001f;
+    background: #4A2C2A;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -376,8 +376,8 @@ header .container {
 
 .add-to-cart-btn:hover {
     background: #fff;
-    color: #62001f;
-    border: 1px solid #62001f;
+    color: #4A2C2A;
+    border: 1px solid #4A2C2A;
     transform: scale(1.05);
 }
 
