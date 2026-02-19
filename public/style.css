@@ -297,13 +297,12 @@ header .container {
     color: #4A2C2A;
     padding: 14px 40px;
     border-radius: 30px;
-    border: 1px solid #4A2C2A;
+    border: 1px solid transparent;
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 600;
     font-family: "Grandstander", cursive;
     transition: all 0.3s ease;
-    border: 2px solid #4A2C2A;
 }
 
 .main-cta3:hover {
