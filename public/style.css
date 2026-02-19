@@ -430,7 +430,7 @@ header .container {
 .add-to-cart-btn {
     background: #4A2C2A;
     color: white;
-    border: none;
+    border: 1px solid transparent;
     padding: 10px 20px;
     border-radius: 25px;
     cursor: pointer;
