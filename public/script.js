@@ -1,17 +1,12 @@
-// CONFIGURAÇÃO DA LOJA
 const WHATSAPP_LOJA = "11991084308";
 
-// CONFIGURAÇÃO DO EMAILJS
 const EMAILJS_CONFIG = {
     publicKey: "QJEsDhXmiLiWFglo_",
     serviceId: "service_6wpm9za",
     templateId: "template_7o5c8rc"
 };
 
-// ============================================
-// CARREGAR PRODUTOS DO MONGODB
-// ============================================
-let products = []; // Array que vai receber os produtos do MongoDB
+let products = [];
 let cart = [];
 
 async function carregarProdutosMongoDB(categoria = 'todos') {
@@ -33,9 +28,8 @@ async function carregarProdutosMongoDB(categoria = 'todos') {
         if (data.success && data.products) {
             console.log(`${data.products.length} produtos carregados do MongoDB`);
             
-            // IMPORTANTE: Transforma os produtos do MongoDB no formato correto
             products = data.products.map(p => ({
-                id: p._id,  // MongoDB usa _id
+                id: p._id,
                 name: p.name,
                 category: p.category,
                 description: p.description,
@@ -397,7 +391,6 @@ function escolherMetodoPagamento() {
 
         document.body.appendChild(modal);
 
-        // Event listeners (não usa onclick inline)
         modal.querySelector('.btn-pix').addEventListener('click', () => {
             modal.remove();
             resolve('pix');
@@ -491,7 +484,6 @@ function enviarEmailConfirmacao(customer, total, items) {
     );
 }
 
-// ===== MERCADO PAGO =====
 const API_URL = '';
 
 async function criarPagamentoPix(customer, items, total) {
@@ -919,7 +911,6 @@ function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
     });
 }
 
-// ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', async function() {
     await carregarProdutosMongoDB();
     configurarMascaras();
