@@ -9,7 +9,7 @@
 
 body {    
     font-family: "Grandstander", cursive;    
-    background: linear-gradient(135deg, #432b2a 0%, #432b2af7 100%);
+    background: linear-gradient(135deg, #4A2C2A 0%, #482b29 100%);
     min-height: 100vh;
 }
 
@@ -192,7 +192,7 @@ header .container {
 
 .main-wave {
     position: absolute;
-    bottom: -1px;
+    bottom: -2px;
     left: 0;
     width: 100%;
     line-height: 0;
@@ -272,10 +272,31 @@ header .container {
     background: #4A2C2A;
     color: #fffdf9;
     border: 1px solid #fff;
-    transform: scale(1.05);
+    transform: scale(1.07);
 }
 
-/* Filtros */
+.main-cta3 {
+    display: inline-block;
+    background: #fffdf9;
+    color: #4A2C2A;
+    padding: 14px 40px;
+    border-radius: 30px;
+    border: 1px solid #4A2C2A;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: "Grandstander", cursive;
+    transition: all 0.3s ease;
+    border: 2px solid #4A2C2A;
+}
+
+.main-cta3:hover {
+    background: #4A2C2A;
+    color: #fffdf9;
+    border: 1px solid #fff;
+    transform: scale(1.07);
+}
+
 .filters {
     background: #4A2C2A;
     padding: 50px 0;
@@ -284,32 +305,34 @@ header .container {
 
 .filters .container {
     display: flex;
-    gap: 10px;
+    gap: 25px;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .filter-btn {
     font-family: "Grandstander", cursive;    
-    padding: 10px 24px;
-    border: 2px solid #432b2a;
+    padding: 14px 40px;
+    border: 1px solid #432b2a;
     background: #fffdf9;
     color: #4A2C2A;
-    border-radius: 25px;
+    border-radius: 30px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.1rem;
     transition: all 0.3s;
     font-weight: 500;
 }
 
 .filter-btn:hover {
-    background: #fff4de;
-    color: #4A2C2A;
+    background-color: #5a3c3c;
+    color: #fffdf9;
+    border: 1px solid #fff;
 }
 
 .filter-btn.active {
-    background: #fff4de;
-    color: #4A2C2A;
+    background: #5a3c3c;
+    color: #fffdf9;
+    border: 1px solid #fff;
 }
 
 /* Produtos */
@@ -815,7 +838,7 @@ header .container {
     .form-actions {
         flex-direction: column;
     }
-    .main-section { padding: 40px 0 80px; }
+    .main-section { padding: 100px 0 80px; }
     .main-section-inner {
         flex-direction: column;
         gap: 24px;
