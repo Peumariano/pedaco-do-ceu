@@ -298,13 +298,8 @@ header .container {
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
 }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
 
 .product-image {
     width: 100%;
@@ -339,7 +334,7 @@ header .container {
 .product-name {
     font-size: 20px;
     font-weight: 600;
-    color: #fffdf9;
+    color: #4A2C2A;
     margin-bottom: 8px;
 }
 
