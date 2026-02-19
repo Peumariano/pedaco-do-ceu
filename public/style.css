@@ -9,7 +9,7 @@
 
 body {    
     font-family: "Grandstander", cursive;    
-    background: linear-gradient(135deg, #4A2C2A 0%, #482b29 100%);
+    background: linear-gradient(135deg, #fff 0%, #fbf9f9 100%);
     min-height: 100vh;
 }
 
@@ -24,7 +24,7 @@ header {
     background: #fffdf9;
     color:#4A2C2A ;
     padding: 20px 0;
-    box-shadow: 0 4px 6px rgba(255, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(77, 47, 47, 0.1);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -100,10 +100,10 @@ header .container {
 
 /* ========== MAIN SECTION ========== */
 .main-section {
-    background: #fffdf9;
+    background: #fff;
     position: relative;
     overflow: hidden;
-    padding: 120px 0 100px;
+    padding: 80px 100px 10px 100px;
 }
 
 .main-section-inner {
@@ -190,17 +190,28 @@ header .container {
     filter: drop-shadow(0 4px 12px rgba(74, 44, 42, 0.25));
 }
 
+.main-section + .main-wave {
+    margin-bottom: -1px; 
+}
+
 .main-wave {
-    position: absolute;
-    bottom: -2px;
-    left: 0;
+    position: relative; 
     width: 100%;
     line-height: 0;
+    z-index: 5;
+}
+.section2 + .main-wave {
+    margin-top: -1px; 
 }
 
 .main-wave svg {
     width: 100%;
     height: auto;
+    display: block;
+}
+
+.wave-bottom {
+    transform: rotate(180deg);
     display: block;
 }
 
@@ -224,7 +235,8 @@ header .container {
     background: #4A2C2A;
     position: relative;
     overflow: hidden;
-    padding: 120px 0 100px;
+    padding: 80px 100px 10px 100px;
+
 }
 
 .section2-inner {
@@ -298,7 +310,7 @@ header .container {
 }
 
 .filters {
-    background: #4A2C2A;
+    background: #fff;
     padding: 50px 0;
     margin: 0;
 }
