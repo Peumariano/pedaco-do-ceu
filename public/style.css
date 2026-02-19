@@ -242,7 +242,60 @@ header .container {
     }
 }
 
+.section2 {
+    background: #4A2C2A;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 0 100px;
+}
 
+.section2-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+.main-title2 {
+    color: #fffdf9;
+    font-family: "Grandstander", cursive;
+    font-weight: 800;
+    font-size: 4rem;
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+
+.main-subtitle2 {
+    color: #fff4de;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.main-cta2 {
+    display: inline-block;
+    background: #fffdf9;
+    color: #4A2C2A;
+    padding: 14px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: "Grandstander", cursive;
+    transition: all 0.3s ease;
+    border: 2px solid #4A2C2A;
+}
+
+.main-cta2:hover {
+    background: #4A2C2A;
+    color: #fffdf9;
+    border: 1px solid #fff;
+    transform: scale(1.05);
+}
 
 /* Filtros */
 .filters {
