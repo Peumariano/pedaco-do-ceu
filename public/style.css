@@ -272,13 +272,13 @@ header .container {
 }
 
 .filter-btn:hover {
-    background: #4A2C2A;
-    color: #fffdf9;
+    background: #fff4de;
+    color: #4A2C2A;
 }
 
 .filter-btn.active {
-    background: #4A2C2A;
-    color: #fffdf9;
+    background: #fff4de;
+    color: #4A2C2A;
 }
 
 /* Produtos */
@@ -293,7 +293,7 @@ header .container {
 }
 
 .product-card {
-    border-radius: 15px;
+    border-radius: 18px;
     background-color: #fff4de;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
