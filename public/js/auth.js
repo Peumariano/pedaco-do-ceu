@@ -15,10 +15,6 @@ const firebaseConfig = {
   measurementId: "G-WG1CHW8P7L"
 };
 
-
-// ================================================
-// IMPORTS DO FIREBASE (CDN)
-// ================================================
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
 import { 
     getAuth, 
@@ -28,29 +24,73 @@ import {
     signOut 
 } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
+// Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+// ================================================
+// ESTADO GLOBAL DO USUÁRIO
+// ================================================
 let currentUser = null;
 let currentToken = null;
+let mongoUser = null;
 
 // ================================================
-// MONITORA ESTADO DE AUTENTICAÇÃO
+// MONITORA MUDANÇAS DE AUTENTICAÇÃO
 // ================================================
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        currentUser = user;
-        currentToken = await user.getIdToken();
-        console.log('Usuário logado:', user.displayName);
-        atualizarUI(user);
+onAuthStateChanged(auth, async (firebaseUser) => {
+    if (firebaseUser) {
+        console.log('✅ Usuário logado:', firebaseUser.displayName);
+        
+        // Pega token do Firebase
+        currentUser = firebaseUser;
+        currentToken = await firebaseUser.getIdToken();
+        
+        // Sincroniza com MongoDB
+        await sincronizarComMongoDB();
+        
+        // Atualiza UI
+        atualizarHeaderLogado();
+        
     } else {
+        console.log('👤 Nenhum usuário logado');
         currentUser = null;
         currentToken = null;
-        console.log('Usuário deslogado');
-        mostrarBotaoLogin();
+        mongoUser = null;
+        atualizarHeaderDeslogado();
     }
 });
+
+// ================================================
+// SINCRONIZAÇÃO COM MONGODB
+// ================================================
+async function sincronizarComMongoDB() {
+    try {
+        const response = await fetch('/api/auth-verify', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                firebaseUid: currentUser.uid,
+                name: currentUser.displayName,
+                email: currentUser.email,
+                avatar: currentUser.photoURL
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            mongoUser = data.user;
+            console.log('✅ Sincronizado com MongoDB:', mongoUser._id);
+        }
+    } catch (error) {
+        console.error('❌ Erro ao sincronizar com MongoDB:', error);
+    }
+}
 
 // ================================================
 // LOGIN COM GOOGLE
@@ -58,12 +98,17 @@ onAuthStateChanged(auth, async (user) => {
 async function loginComGoogle() {
     try {
         const result = await signInWithPopup(auth, provider);
-        currentToken = await result.user.getIdToken();
-        console.log('Login realizado:', result.user.displayName);
+        console.log('✅ Login bem-sucedido!');
+        showNotification('Bem-vindo, ' + result.user.displayName + '! 🎉');
     } catch (error) {
-        console.error('Erro no login:', error);
-        if (error.code !== 'auth/popup-closed-by-user') {
-            alert('Erro ao fazer login. Tente novamente.');
+        console.error('❌ Erro no login:', error);
+        
+        if (error.code === 'auth/popup-closed-by-user') {
+            showNotification('Login cancelado');
+        } else if (error.code === 'auth/popup-blocked') {
+            showNotification('Pop-up bloqueado. Permita pop-ups para este site.');
+        } else {
+            showNotification('Erro ao fazer login. Tente novamente.');
         }
     }
 }
@@ -74,70 +119,301 @@ async function loginComGoogle() {
 async function logout() {
     try {
         await signOut(auth);
-        console.log('Logout realizado');
+        console.log('✅ Logout realizado');
+        showNotification('Até logo! 👋');
+        
+        // Redireciona para home se estiver na página de perfil
+        if (window.location.pathname.includes('perfil')) {
+            window.location.href = '/';
+        }
     } catch (error) {
-        console.error('Erro no logout:', error);
+        console.error('❌ Erro no logout:', error);
+        showNotification('Erro ao fazer logout');
     }
 }
 
 // ================================================
-// UI
+// ATUALIZAR HEADER - LOGADO
 // ================================================
-function atualizarUI(user) {
-    const headerActions = document.querySelector('.header-actions');
-    if (!headerActions) return;
+function atualizarHeaderLogado() {
+    const header = document.querySelector('header .container');
+    if (!header) return;
 
-    headerActions.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="${user.photoURL || 'assets/avatar-default.png'}" 
-                 style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid white;"
-                 title="${user.displayName}">
-            <span style="color: white; font-size: 14px;">
-                Olá, ${user.displayName?.split(' ')[0]}!
-            </span>
-            <button onclick="window.firebaseAuth.logout()" style="
-                background: rgba(255,255,255,0.2);
-                color: white;
-                border: 1px solid white;
-                padding: 8px 16px;
-                border-radius: 20px;
-                cursor: pointer;
-                font-size: 13px;
-            ">Sair</button>
-        </div>
-    `;
+    // Remove botão de login se existir
+    const loginBtn = header.querySelector('.login-btn');
+    if (loginBtn) loginBtn.remove();
+
+    // Cria menu de usuário se não existir
+    let userMenu = header.querySelector('.user-menu');
+    if (!userMenu) {
+        userMenu = document.createElement('div');
+        userMenu.className = 'user-menu';
+        
+        userMenu.innerHTML = `
+            <div class="user-menu-trigger">
+                <img src="${currentUser.photoURL || 'assets/avatar-default.png'}" 
+                     alt="${currentUser.displayName}" 
+                     class="user-avatar"
+                     title="${currentUser.displayName}">
+                <span class="user-name">${currentUser.displayName?.split(' ')[0]}</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M4 6l4 4 4-4"/>
+                </svg>
+            </div>
+            <div class="user-dropdown">
+                <div class="user-dropdown-header">
+                    <img src="${currentUser.photoURL}" alt="${currentUser.displayName}">
+                    <div>
+                        <strong>${currentUser.displayName}</strong>
+                        <span>${currentUser.email}</span>
+                    </div>
+                </div>
+                <div class="user-dropdown-divider"></div>
+                <a href="/perfil.html" class="user-dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Minha Conta
+                </a>
+                <a href="/perfil.html#pedidos" class="user-dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    Meus Pedidos
+                </a>
+                <div class="user-dropdown-divider"></div>
+                <button onclick="window.firebaseAuth.logout()" class="user-dropdown-item logout-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Sair
+                </button>
+            </div>
+        `;
+
+        // Insere antes do carrinho
+        const cartIcon = header.querySelector('.cart-icon');
+        if (cartIcon) {
+            header.insertBefore(userMenu, cartIcon);
+        } else {
+            header.appendChild(userMenu);
+        }
+
+        // Toggle dropdown ao clicar
+        const trigger = userMenu.querySelector('.user-menu-trigger');
+        const dropdown = userMenu.querySelector('.user-dropdown');
+        
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+
+        // Fecha dropdown ao clicar fora
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('show');
+        });
+
+        dropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
 }
 
-function mostrarBotaoLogin() {
-    const headerActions = document.querySelector('.header-actions');
-    if (!headerActions) return;
+// ================================================
+// ATUALIZAR HEADER - DESLOGADO
+// ================================================
+function atualizarHeaderDeslogado() {
+    const header = document.querySelector('header .container');
+    if (!header) return;
 
-    headerActions.innerHTML = `
-        <button onclick="window.firebaseAuth.loginComGoogle()" style="
-            background: white;
-            color: #4A2C2A;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        ">
-            <img src="https://www.google.com/favicon.ico" width="18">
+    // Remove menu de usuário se existir
+    const userMenu = header.querySelector('.user-menu');
+    if (userMenu) userMenu.remove();
+
+    // Adiciona botão de login se não existir
+    let loginBtn = header.querySelector('.login-btn');
+    if (!loginBtn) {
+        loginBtn = document.createElement('button');
+        loginBtn.className = 'login-btn';
+        loginBtn.onclick = loginComGoogle;
+        loginBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 18 18">
+                <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
+                <path fill="#34A853" d="M9.003 18c2.43 0 4.467-.806 5.956-2.18L12.05 13.56c-.806.54-1.836.86-3.047.86-2.344 0-4.328-1.584-5.036-3.711H.96v2.332C2.44 15.983 5.485 18 9.003 18z"/>
+                <path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/>
+                <path fill="#EA4335" d="M9.003 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.464.891 11.428 0 9.003 0 5.485 0 2.44 2.017.96 4.958L3.967 7.29c.708-2.127 2.692-3.71 5.036-3.71z"/>
+            </svg>
             Entrar com Google
-        </button>
-    `;
+        `;
+
+        // Insere antes do carrinho
+        const cartIcon = header.querySelector('.cart-icon');
+        if (cartIcon) {
+            header.insertBefore(loginBtn, cartIcon);
+        } else {
+            header.appendChild(loginBtn);
+        }
+    }
 }
 
-// Exporta para uso global
+// ================================================
+// FUNÇÕES DE API - USUÁRIO
+// ================================================
+
+// Busca perfil completo do usuário do MongoDB
+async function buscarPerfilUsuario() {
+    if (!currentToken) {
+        console.error('Usuário não autenticado');
+        return null;
+    }
+
+    try {
+        const response = await fetch('/api/user-profile', {
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            mongoUser = data.user;
+            return data.user;
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Erro ao buscar perfil:', error);
+        return null;
+    }
+}
+
+// Atualiza endereço do usuário
+async function atualizarEndereco(addressData) {
+    if (!currentToken) {
+        showNotification('Você precisa estar logado!');
+        return false;
+    }
+
+    try {
+        const response = await fetch('/api/user-address', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify(addressData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            mongoUser = data.user;
+            showNotification('✅ Endereço salvo com sucesso!');
+            return true;
+        }
+
+        return false;
+    } catch (error) {
+        console.error('Erro ao salvar endereço:', error);
+        showNotification('❌ Erro ao salvar endereço');
+        return false;
+    }
+}
+
+// Busca pedidos do usuário
+async function buscarPedidosUsuario() {
+    if (!currentToken) {
+        console.error('Usuário não autenticado');
+        return [];
+    }
+
+    try {
+        const response = await fetch('/api/user-orders', {
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            return data.orders;
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('Erro ao buscar pedidos:', error);
+        return [];
+    }
+}
+
+// ================================================
+// PROTEÇÃO DE PÁGINAS
+// ================================================
+
+// Verifica se usuário está logado (use em páginas protegidas)
+function verificarAutenticacao() {
+    if (!currentUser) {
+        showNotification('Você precisa estar logado para acessar esta página');
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 2000);
+        return false;
+    }
+    return true;
+}
+
+// Auto-preenche formulário com dados salvos
+async function preencherFormularioComDadosSalvos() {
+    if (!currentUser) return;
+
+    const userData = await buscarPerfilUsuario();
+    
+    if (userData && userData.address) {
+        const addr = userData.address;
+        
+        // Preenche campos se existirem
+        const fields = {
+            'name': userData.name,
+            'email': userData.email,
+            'phone': userData.phone,
+            'cep': addr.cep,
+            'street': addr.street,
+            'number': addr.number,
+            'complement': addr.complement,
+            'neighborhood': addr.neighborhood,
+            'city': addr.city,
+            'state': addr.state
+        };
+
+        Object.keys(fields).forEach(fieldName => {
+            const element = document.getElementById(fieldName);
+            if (element && fields[fieldName]) {
+                element.value = fields[fieldName];
+            }
+        });
+    }
+}
+
+// ================================================
+// EXPORTAR FUNÇÕES GLOBALMENTE
+// ================================================
 window.firebaseAuth = {
     loginComGoogle,
     logout,
+    getCurrentUser: () => currentUser,
     getCurrentToken: () => currentToken,
-    getCurrentUser: () => currentUser
+    getMongoUser: () => mongoUser,
+    buscarPerfilUsuario,
+    atualizarEndereco,
+    buscarPedidosUsuario,
+    verificarAutenticacao,
+    preencherFormularioComDadosSalvos
 };
 
-console.log('Firebase Auth inicializado');
+console.log('🔐 Firebase Auth carregado');
