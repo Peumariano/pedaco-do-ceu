@@ -1,5 +1,6 @@
 // api/create-payment.js
 const { MercadoPagoConfig, Payment } = require('mercadopago');
+const { authMiddleware } = require('../middleware/auth');
 
 const client = new MercadoPagoConfig({
     accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
@@ -8,6 +9,9 @@ const client = new MercadoPagoConfig({
 const payment = new Payment(client);
 
 module.exports = async (req, res) => {
+
+    await authMiddleware(req, res, () => {});
+    
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

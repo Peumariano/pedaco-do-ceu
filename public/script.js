@@ -969,7 +969,13 @@ function configurarMascaras() {
 }
 
 function configurarFormulario() {
-    const form = document.getElementById('checkout-form');
+    const form = document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+         if (window.firebaseAuth && window.firebaseAuth.getCurrentUser()) {
+        await window.firebaseAuth.preencherFormularioComDadosSalvos();
+    }
+        
+    });
     if (form) {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
