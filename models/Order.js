@@ -1,42 +1,60 @@
 // models/Order.js
-// Model dos Pedidos - salvo no MongoDB
+// Model de Pedidos - com integração Mercado Pago
 
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
 
-    // ← Quem fez o pedido
+    // Referência ao usuário que fez o pedido
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        index: true
     },
 
-    // Número do pedido (legível para o cliente)
+    // Número do pedido (único e legível)
     orderNumber: {
         type: String,
-        unique: true
+        unique: true,
+        default: function() {
+            return `ORD-${Date.now()}`;
+        }
     },
 
-    // ← Itens do pedido (snapshot dos produtos no momento da compra)
+    // Items do pedido
     items: [{
         product: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Product'
         },
-        name: String,       // Nome salvo no momento da compra
-        price: Number,      // Preço no momento da compra
-        quantity: Number,
-        subtotal: Number
+        name: {
+            type: String,
+            required: true
+        },
+        price: {
+            type: Number,
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: true,
+            min: 1
+        },
+        subtotal: {
+            type: Number,
+            required: true
+        }
     }],
 
-    // ← Valores
+    // Valor total do pedido
     total: {
         type: Number,
-        required: true
+        required: true,
+        min: 0
     },
 
-    // ← Endereço de entrega (copiado do usuário no momento)
+    // Endereço de entrega
     deliveryAddress: {
         cep: String,
         street: String,
@@ -47,14 +65,14 @@ const orderSchema = new mongoose.Schema({
         state: String
     },
 
-    // ← Pagamento
+    // Método de pagamento
     paymentMethod: {
         type: String,
-        enum: ['pix', 'dinheiro'],
+        enum: ['pix', 'dinheiro', 'cartao'],
         required: true
     },
 
-    // Status do pagamento (Mercado Pago)
+    // Status do pagamento
     paymentStatus: {
         type: String,
         enum: ['pending', 'approved', 'rejected', 'cancelled'],
@@ -67,18 +85,27 @@ const orderSchema = new mongoose.Schema({
         default: null
     },
 
-    // ← Status do pedido
+    // Status do pedido
     status: {
         type: String,
-        enum: ['aguardando_pagamento', 'confirmado', 'em_preparo', 'saiu_para_entrega', 'entregue', 'cancelado'],
+        enum: [
+            'aguardando_pagamento',
+            'confirmado',
+            'em_preparo',
+            'saiu_para_entrega',
+            'entregue',
+            'cancelado'
+        ],
         default: 'aguardando_pagamento'
     },
 
+    // Observações do cliente
     observations: {
         type: String,
         default: ''
     },
 
+    // Datas
     createdAt: {
         type: Date,
         default: Date.now
@@ -91,13 +118,44 @@ const orderSchema = new mongoose.Schema({
 
 });
 
-// Gera número do pedido antes de salvar
+// Índices para performance
+orderSchema.index({ user: 1, createdAt: -1 });
+orderSchema.index({ orderNumber: 1 });
+orderSchema.index({ mercadoPagoId: 1 });
+
+// Atualiza updatedAt automaticamente
 orderSchema.pre('save', function(next) {
-    if (!this.orderNumber) {
-        this.orderNumber = `PDC-${Date.now()}`;
-    }
-    this.updatedAt = new Date();
+    this.updatedAt = Date.now();
     next();
 });
+
+// Método para atualizar status
+orderSchema.methods.updateStatus = async function(newStatus) {
+    this.status = newStatus;
+    return await this.save();
+};
+
+// Método para aprovar pagamento
+orderSchema.methods.approvePayment = async function() {
+    this.paymentStatus = 'approved';
+    this.status = 'confirmado';
+    return await this.save();
+};
+
+// Método estático para buscar pedidos de um usuário
+orderSchema.statics.findByUser = function(userId) {
+    return this.find({ user: userId })
+        .sort({ createdAt: -1 })
+        .populate('items.product');
+};
+
+// Virtual para quantidade total de items
+orderSchema.virtual('totalItems').get(function() {
+    return this.items.reduce((sum, item) => sum + item.quantity, 0);
+});
+
+// Configura JSON para incluir virtuals
+orderSchema.set('toJSON', { virtuals: true });
+orderSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -1,39 +1,46 @@
 // models/User.js
-// Model do Usuário - salvo no MongoDB
+// Model do Usuário - integrado com Firebase Auth
 
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
 
-    // ← Dados do Google (Firebase Auth)
+    // UID do Firebase (identificador único)
     firebaseUid: {
         type: String,
-        required: true,
-        unique: true
+        required: [true, 'Firebase UID é obrigatório'],
+        unique: true,
+        index: true
     },
 
-    // ← Dados básicos
+    // Dados básicos
     name: {
         type: String,
-        required: true,
+        required: [true, 'Nome é obrigatório'],
         trim: true
     },
 
     email: {
         type: String,
-        required: true,
+        required: [true, 'Email é obrigatório'],
         unique: true,
         lowercase: true,
         trim: true
     },
 
-    // Foto do Google
+    // Foto do perfil (URL do Google)
     avatar: {
         type: String,
         default: null
     },
 
-    // ← Endereço salvo (não precisa digitar toda vez)
+    // Telefone/WhatsApp
+    phone: {
+        type: String,
+        default: ''
+    },
+
+    // Endereço de entrega
     address: {
         cep: { type: String, default: '' },
         street: { type: String, default: '' },
@@ -44,25 +51,20 @@ const userSchema = new mongoose.Schema({
         state: { type: String, default: '' }
     },
 
-    phone: {
-        type: String,
-        default: ''
-    },
-
-    // ← Histórico de pedidos (referência à collection de pedidos)
+    // Histórico de pedidos (referência)
     orders: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order'
     }],
 
-    // ← Controle de acesso
+    // Nível de acesso
     role: {
         type: String,
         enum: ['customer', 'admin'],
         default: 'customer'
     },
 
-    // ← Datas automáticas
+    // Datas
     createdAt: {
         type: Date,
         default: Date.now
@@ -75,10 +77,26 @@ const userSchema = new mongoose.Schema({
 
 });
 
-// Atualiza o lastLogin sempre que o usuário logar
-userSchema.methods.updateLastLogin = function() {
-    this.lastLogin = new Date();
-    return this.save();
+// Índices para performance
+userSchema.index({ email: 1 });
+userSchema.index({ firebaseUid: 1 });
+
+// Método virtual para nome curto
+userSchema.virtual('firstName').get(function() {
+    return this.name.split(' ')[0];
+});
+
+// Método para adicionar pedido ao histórico
+userSchema.methods.addOrder = async function(orderId) {
+    this.orders.push(orderId);
+    return await this.save();
+};
+
+// Não exporta o firebaseUid no JSON (segurança)
+userSchema.methods.toJSON = function() {
+    const obj = this.toObject();
+    delete obj.firebaseUid;
+    return obj;
 };
 
 module.exports = mongoose.model('User', userSchema);
