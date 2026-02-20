@@ -347,14 +347,14 @@ function escolherMetodoPagamento() {
                 padding: 40px;
                 text-align: center;
             ">
-                <h2 style="margin: 0 0 20px 0; color: #62001f;">Como deseja pagar?</h2>
+                <h2 style="margin: 0 0 20px 0; color: #4A2C2A;">Como deseja pagar?</h2>
 
                 <button class="btn-pix" style="
                     width: 100%;
                     padding: 20px;
                     margin: 10px 0;
-                    border: 2px solid #62001f;
-                    background: #62001f;
+                    border: 2px solid #4A2C2A;
+                    background: #4A2C2A;
                     color: white;
                     border-radius: 10px;
                     font-size: 18px;
@@ -372,9 +372,9 @@ function escolherMetodoPagamento() {
                     width: 100%;
                     padding: 20px;
                     margin: 10px 0;
-                    border: 2px solid #62001f;
+                    border: 2px solid #4A2C2A;
                     background: white;
-                    color: #62001f;
+                    color: #4A2C2A;
                     border-radius: 10px;
                     font-size: 18px;
                     font-weight: bold;
@@ -598,7 +598,7 @@ function mostrarModalPix(paymentData) {
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         ">
             <div style="
-                background: linear-gradient(135deg, #62001f 0%, #a02b52 100%);
+                background: linear-gradient(135deg, #4A2C2A 0%, #462b2a 100%);
                 color: white;
                 padding: 25px;
                 border-radius: 15px 15px 0 0;
@@ -611,7 +611,7 @@ function mostrarModalPix(paymentData) {
             <div style="padding: 30px; text-align: center;">
                 <div style="margin-bottom: 20px;">
                     <div style="font-size: 14px; color: #666; margin-bottom: 5px;">Valor a pagar:</div>
-                    <div style="font-size: 32px; font-weight: bold; color: #8b4513;">
+                    <div style="font-size: 32px; font-weight: bold; color: #4A2C2A;">
                         R$ ${paymentData.amount.toFixed(2)}
                     </div>
                 </div>
@@ -628,7 +628,7 @@ function mostrarModalPix(paymentData) {
                     border: none;
                     border-radius: 18px;
                     margin-bottom: 20px;
-                    color: #62001f;
+                    color: #4A2C2A;
                 ">
                     Aguardando pagamento...
                 </div>
@@ -638,10 +638,10 @@ function mostrarModalPix(paymentData) {
                         Ou copie o código Pix:
                     </p>
                     <div style="
-                        background: #a02b520b;
+                        background: #4A2C2A;
                         padding: 15px;
                         border-radius: 18px;
-                        border: 1px solid #62001f;
+                        border: 1px solid #3d2827;
                         word-break: break-all;
                         font-family: Grandstander, cursive;
                         font-size: 18px;
@@ -650,9 +650,9 @@ function mostrarModalPix(paymentData) {
                         ${paymentData.qrCode}
                     </div>
                     <button class="btn-copiar-pix" style="
-                        background: #a02b52;
+                        background: #4A2C2A;
                         color: white;
-                        border: 1px solid #62001f;
+                        border: 1px solid #3b2927;
                         padding: 12px 24px;
                         border-radius: 80px;
                         cursor: pointer;

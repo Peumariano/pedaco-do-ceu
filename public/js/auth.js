@@ -115,7 +115,7 @@ function mostrarBotaoLogin() {
     headerActions.innerHTML = `
         <button onclick="window.firebaseAuth.loginComGoogle()" style="
             background: white;
-            color: #62001f;
+            color: #4A2C2A;
             border: none;
             padding: 10px 20px;
             border-radius: 25px;

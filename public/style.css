@@ -26,7 +26,7 @@ body {
 /* Header */
 header {
     background: #fffdf9;
-    color:#4A2C2A ;
+    color:#4A2C2A;
     padding: 20px 0;
     box-shadow: 0 4px 6px rgba(77, 47, 47, 0.1);
     position: sticky;
@@ -102,7 +102,6 @@ header .container {
     font-weight: bold;
 }
 
-/* ========== MAIN SECTION ========== */
 .main-section {
     background: #fff;
     position: relative;
@@ -465,7 +464,7 @@ header .container {
 
 .cart-header {
     padding: 20px;
-    background: #62001f;
+    background: #4A2C2A;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -525,7 +524,7 @@ header .container {
 }
 
 .cart-item-price {
-    color: #62001f;
+    color: #4A2C2A;
     font-weight: 600;
 }
 
@@ -641,7 +640,7 @@ header .container {
 }
 
 .checkout-header {
-    background: #62001f;
+    background: #4A2C2A;
     color: white;
     padding: 20px 30px;
     display: flex;
@@ -705,8 +704,8 @@ header .container {
     font-size: 20px;
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 2px solid #62001f;
-    color: #62001f;
+    border-top: 2px solid #4A2C2A;
+    color: #4A2C2A;
 }
 
 /* Formulário */
@@ -743,7 +742,7 @@ header .container {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #62001f;
+    border-color: #4A2C2A;
 }
 
 .form-group textarea {
@@ -801,7 +800,7 @@ header .container {
 /* Responsivo */
 
 @media (max-width: 1100px) {
-    
+
     .main-img-left img,
     .main-img-right img {
         display: none;
