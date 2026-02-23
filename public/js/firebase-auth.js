@@ -15,6 +15,7 @@ const firebaseConfig = {
   measurementId: "G-WG1CHW8P7L"
 };
 
+// Imports do Firebase (CDN)
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
 import { 
     getAuth, 
@@ -45,7 +46,15 @@ onAuthStateChanged(auth, async (firebaseUser) => {
         
         // Pega token do Firebase
         currentUser = firebaseUser;
-        currentToken = await firebaseUser.getIdToken();
+        
+        try {
+            currentToken = await firebaseUser.getIdToken();
+            console.log('🔑 Token obtido');
+        } catch (error) {
+            console.error('❌ Erro ao obter token:', error);
+            showNotification('Erro ao obter token de autenticação');
+            return;
+        }
         
         // Sincroniza com MongoDB
         await sincronizarComMongoDB();
@@ -67,6 +76,13 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 // ================================================
 async function sincronizarComMongoDB() {
     try {
+        console.log('🔄 Sincronizando com MongoDB...');
+
+        if (!currentToken) {
+            console.error('❌ Token não disponível');
+            return;
+        }
+
         const response = await fetch('/api/auth-verify', {
             method: 'POST',
             headers: {
@@ -81,14 +97,56 @@ async function sincronizarComMongoDB() {
             })
         });
 
+        // Verifica se a resposta é JSON
+        const contentType = response.headers.get('content-type');
+        
+        if (!contentType || !contentType.includes('application/json')) {
+            console.error('❌ Resposta não é JSON');
+            const text = await response.text();
+            console.error('Resposta recebida:', text.substring(0, 200));
+            
+            showNotification('⚠️ Erro ao sincronizar dados. Tente fazer login novamente.');
+            return;
+        }
+
         const data = await response.json();
+
+        if (!response.ok) {
+            console.error('❌ Erro na resposta:', data.error);
+            showNotification(`Erro: ${data.error}`);
+            return;
+        }
 
         if (data.success) {
             mongoUser = data.user;
             console.log('✅ Sincronizado com MongoDB:', mongoUser._id);
+            
+            // Salva no localStorage como backup
+            try {
+                localStorage.setItem('mongoUser', JSON.stringify(mongoUser));
+            } catch (e) {
+                console.warn('Não foi possível salvar no localStorage:', e);
+            }
+            
+        } else {
+            console.error('❌ Resposta sem sucesso:', data);
         }
+
     } catch (error) {
         console.error('❌ Erro ao sincronizar com MongoDB:', error);
+        
+        // Tenta carregar do localStorage como fallback
+        try {
+            const cached = localStorage.getItem('mongoUser');
+            if (cached) {
+                mongoUser = JSON.parse(cached);
+                console.log('ℹ️ Usando dados do cache local');
+            }
+        } catch (e) {
+            console.warn('Não foi possível carregar do cache:', e);
+        }
+        
+        showNotification('⚠️ Problema na sincronização. Alguns dados podem estar desatualizados.');
     }
 }
 
@@ -97,6 +155,7 @@ async function sincronizarComMongoDB() {
 // ================================================
 async function loginComGoogle() {
     try {
+        console.log('🔐 Iniciando login...');
         const result = await signInWithPopup(auth, provider);
         console.log('✅ Login bem-sucedido!');
         showNotification('Bem-vindo, ' + result.user.displayName + '! 🎉');
@@ -107,6 +166,8 @@ async function loginComGoogle() {
             showNotification('Login cancelado');
         } else if (error.code === 'auth/popup-blocked') {
             showNotification('Pop-up bloqueado. Permita pop-ups para este site.');
+        } else if (error.code === 'auth/cancelled-popup-request') {
+            // Ignora - usuário abriu outro popup
         } else {
             showNotification('Erro ao fazer login. Tente novamente.');
         }
@@ -119,6 +180,14 @@ async function loginComGoogle() {
 async function logout() {
     try {
         await signOut(auth);
+        
+        // Limpa localStorage
+        try {
+            localStorage.removeItem('mongoUser');
+        } catch (e) {
+            console.warn('Erro ao limpar localStorage:', e);
+        }
+        
         console.log('✅ Logout realizado');
         showNotification('Até logo! 👋');
         
@@ -149,20 +218,25 @@ function atualizarHeaderLogado() {
         userMenu = document.createElement('div');
         userMenu.className = 'user-menu';
         
+        const userName = currentUser.displayName?.split(' ')[0] || 'Usuário';
+        
         userMenu.innerHTML = `
             <div class="user-menu-trigger">
                 <img src="${currentUser.photoURL || 'assets/avatar-default.png'}" 
                      alt="${currentUser.displayName}" 
                      class="user-avatar"
+                     onerror="this.src='assets/avatar-default.png'"
                      title="${currentUser.displayName}">
-                <span class="user-name">${currentUser.displayName?.split(' ')[0]}</span>
+                <span class="user-name">${userName}</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                     <path d="M4 6l4 4 4-4"/>
                 </svg>
             </div>
             <div class="user-dropdown">
                 <div class="user-dropdown-header">
-                    <img src="${currentUser.photoURL}" alt="${currentUser.displayName}">
+                    <img src="${currentUser.photoURL || 'assets/avatar-default.png'}" 
+                         alt="${currentUser.displayName}"
+                         onerror="this.src='assets/avatar-default.png'">
                     <div>
                         <strong>${currentUser.displayName}</strong>
                         <span>${currentUser.email}</span>
@@ -264,7 +338,6 @@ function atualizarHeaderDeslogado() {
 // FUNÇÕES DE API - USUÁRIO
 // ================================================
 
-// Busca perfil completo do usuário do MongoDB
 async function buscarPerfilUsuario() {
     if (!currentToken) {
         console.error('Usuário não autenticado');
@@ -278,6 +351,10 @@ async function buscarPerfilUsuario() {
             }
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
         const data = await response.json();
         
         if (data.success) {
@@ -288,11 +365,21 @@ async function buscarPerfilUsuario() {
         return null;
     } catch (error) {
         console.error('Erro ao buscar perfil:', error);
+        
+        // Fallback para dados do cache
+        try {
+            const cached = localStorage.getItem('mongoUser');
+            if (cached) {
+                return JSON.parse(cached);
+            }
+        } catch (e) {
+            console.warn('Erro ao carregar cache:', e);
+        }
+        
         return null;
     }
 }
 
-// Atualiza endereço do usuário
 async function atualizarEndereco(addressData) {
     if (!currentToken) {
         showNotification('Você precisa estar logado!');
@@ -313,6 +400,14 @@ async function atualizarEndereco(addressData) {
 
         if (data.success) {
             mongoUser = data.user;
+            
+            // Atualiza cache
+            try {
+                localStorage.setItem('mongoUser', JSON.stringify(mongoUser));
+            } catch (e) {
+                console.warn('Erro ao salvar cache:', e);
+            }
+            
             showNotification('✅ Endereço salvo com sucesso!');
             return true;
         }
@@ -325,7 +420,6 @@ async function atualizarEndereco(addressData) {
     }
 }
 
-// Busca pedidos do usuário
 async function buscarPedidosUsuario() {
     if (!currentToken) {
         console.error('Usuário não autenticado');
@@ -355,8 +449,6 @@ async function buscarPedidosUsuario() {
 // ================================================
 // PROTEÇÃO DE PÁGINAS
 // ================================================
-
-// Verifica se usuário está logado (use em páginas protegidas)
 function verificarAutenticacao() {
     if (!currentUser) {
         showNotification('Você precisa estar logado para acessar esta página');
@@ -368,7 +460,6 @@ function verificarAutenticacao() {
     return true;
 }
 
-// Auto-preenche formulário com dados salvos
 async function preencherFormularioComDadosSalvos() {
     if (!currentUser) return;
 
@@ -377,7 +468,6 @@ async function preencherFormularioComDadosSalvos() {
     if (userData && userData.address) {
         const addr = userData.address;
         
-        // Preenche campos se existirem
         const fields = {
             'name': userData.name,
             'email': userData.email,
@@ -397,6 +487,19 @@ async function preencherFormularioComDadosSalvos() {
                 element.value = fields[fieldName];
             }
         });
+    }
+}
+
+// ================================================
+// HELPERS
+// ================================================
+function showNotification(message) {
+    // Usa a função do script.js se disponível
+    if (typeof window.showNotification === 'function') {
+        window.showNotification(message);
+    } else {
+        console.log('📢', message);
+        alert(message);
     }
 }
 
