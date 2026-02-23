@@ -1,10 +1,3 @@
-
-// public/js/auth.js
-// Autenticação Google com Firebase
-
-// ================================================
-// CONFIGURAÇÃO DO FIREBASE
-// ================================================
 const firebaseConfig = {
   apiKey: "AIzaSyDvHR4-SW1zEwkMXxFrpqpIHryDcgK0jFg",
   authDomain: "pedaco-do-ceu.firebaseapp.com",
