@@ -83,7 +83,7 @@ async function sincronizarComMongoDB() {
             return;
         }
 
-        const response = await fetch('/api/auth-verify', {
+        const response = await fetch('/api/auth.verify', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ async function sincronizarComMongoDB() {
             const cached = localStorage.getItem('mongoUser');
             if (cached) {
                 mongoUser = JSON.parse(cached);
-                console.log('ℹ️ Usando dados do cache local');
+                console.log('ℹUsando dados do cache local');
             }
         } catch (e) {
             console.warn('Não foi possível carregar do cache:', e);
