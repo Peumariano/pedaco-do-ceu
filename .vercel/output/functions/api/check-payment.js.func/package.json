@@ -1,0 +1,16 @@
+{
+  "name": "Pedaco-do-ceu",
+  "version": "1.0.0",
+  "description": "E-commerce de Brigadeiros com Mercado Pago",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Build complete'"
+  },
+  "dependencies": {
+    "mercadopago": "^2.0.9"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}

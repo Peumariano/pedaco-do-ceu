@@ -1,10 +1,8 @@
 node_modules/
 .env
 .env.local
-.vercel
 *.log
 .DS_Store
 .env*.local
-public/js/auth.js
 firebase-adminsdk-*.json
 test.js
