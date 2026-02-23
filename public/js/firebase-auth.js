@@ -83,7 +83,7 @@ async function sincronizarComMongoDB() {
             return;
         }
 
-        const response = await fetch('/api/auth.verify', {
+        const response = await fetch('/api/auth-verify', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
