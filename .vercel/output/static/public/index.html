@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedaço do Céu - Brigadeiros Gourmet</title>
+    <link rel="icon" href="assets/favicon.ico.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK (CDN) -->
+    <script type="module" src="js/firebase-auth.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                
+                <div class="logo-text">
+                    <h1>Pedaço do Céu </h1>
+                </div>
+            </a>
+            <div class="cart-icon" onclick="toggleCart()">
+                <span class="cart-count">0</span>
+                Ver sacola
+            </div>
+        </div>
+    </header>
+
+   <section class="main-section">
+    <div class="main-section-inner">
+        <div class="main-img-left">
+            <img src="assets/brigadeiro-tradicional.png" alt="Brigadeiro tradicional">
+        </div>
+
+        <div class="main-section-center">
+            <h1 class="main-title">Brigadeiro é<br>Felicidade</h1>
+            <p class="main-subtitle">Doces que derretem na boca e no coração. Feito com amor e os melhores ingredientes.</p>
+            <a href="#products-grid" class="main-cta">Confira</a>
+        </div>
+
+        <div class="main-img-right">
+            <img src="assets/brigadeiro-morango.png" alt="Brigadeiro de morango">
+        </div>
+    </div>
+
+</section>
+
+   <!-- Wave divider -->
+    <div class="main-wave">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 60C240 120 480 0 720 60C960 120 1200 0 1440 60V120H0V60Z" fill="#4A2C2A"/>
+        </svg>
+    </div>
+
+   <section class="section2">
+    <div class="section2-inner">
+        <div class="main-img-left">
+            <img src="assets/brigadeiro-ninho.png" alt="Brigadeiro tradicional">
+        </div>
+
+        <div class="main-img-right">
+            <img src="assets/brigadeiro-coco-queimado.png" alt="Brigadeiro de morango">
+        </div>
+
+        <div class="main-section-center">
+            <h1 class="main-title2">Brigadeiros<br>Gourmet</h1>
+            <p class="main-subtitle2">Tudo que você precisa é amor, e um pouco de chocolate. Brigadeiros são a nossa felicidade.</p>
+            <a href="#products-grid" class="main-cta3">Comprar</a>
+        </div>
+    </div>   
+
+   
+
+</section>
+ <div class="main-wave wave-bottom">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path d="M0 60C240 120 480 0 720 60C960 120 1200 0 1440 60V120H0V60Z" fill="#4A2C2A"/>
+        </svg>
+    </div>
+
+    <!-- Filtros -->
+    <section class="filters">
+        
+        <div class="container">
+            <button class="filter-btn active" onclick="filterProducts('todos', this)">Todos</button>
+            <button class="filter-btn" onclick="filterProducts('tradicional', this)">Tradicionais</button>
+            <button class="filter-btn" onclick="filterProducts('diferente', this)">Diferentes</button>
+            <button class="filter-btn" onclick="filterProducts('especial', this)">Especiais</button>
+            <button class="filter-btn" onclick="filterProducts('Caixas', this)">Caixas</button>
+        </div>
+    </section>
+    
+
+
+    <!-- Produtos -->
+    <section class="products">
+        <div class="container">
+            <div id="products-grid" class="products-grid"></div>
+        </div>
+    </section>
+
+    <!-- Carrinho Lateral -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Sua sacola</h2>
+            <button class="close-cart" onclick="toggleCart()">✕</button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <p class="empty-cart">Sua sacola está vazia</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">R$ 0,00</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Finalizar Pedido</button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay" onclick="toggleCart()"></div>
+
+    <!-- Modal de Checkout -->
+    <div id="checkout-modal" class="checkout-modal">
+        <div class="checkout-content">
+            <div class="checkout-header">
+                <h2>Finalizar Pedido</h2>
+                <button class="close-checkout" onclick="closeCheckout()">✕</button>
+            </div>
+            
+            <div class="checkout-body">
+                <div class="checkout-summary">
+                    <h3>Resumo do Pedido</h3>
+                    <div id="checkout-items"></div>
+                    <div class="checkout-total">
+                        <strong>Total:</strong>
+                        <strong id="checkout-total-value">R$ 0,00</strong>
+                    </div>
+                </div>
+
+                <form id="checkout-form" class="checkout-form">
+                    <h3>Dados para Entrega</h3>
+                    
+                    <div class="form-group">
+                        <label for="name">Nome Completo *</label>
+                        <input type="text" id="name" name="name" required placeholder="Seu nome completo">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">E-mail *</label>
+                            <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefone/WhatsApp *</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="(00) 00000-0000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                            <label for="cpf">CPF *</label>
+                            <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00" maxlength="14">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cep">CEP *</label>
+                            <input type="text" id="cep" name="cep" required placeholder="00000-000" maxlength="9">
+                        </div>
+                        <div class="form-group">
+                            <label for="street">Rua *</label>
+                            <input type="text" id="street" name="street" required placeholder="Nome da rua">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group form-small">
+                            <label for="number">Número *</label>
+                            <input type="text" id="number" name="number" required placeholder="123">
+                        </div>
+                        <div class="form-group">
+                            <label for="complement">Complemento</label>
+                            <input type="text" id="complement" name="complement" placeholder="Apto, Bloco, etc (opcional)">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="neighborhood">Bairro *</label>
+                            <input type="text" id="neighborhood" name="neighborhood" required placeholder="Nome do bairro">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Cidade *</label>
+                            <input type="text" id="city" name="city" required placeholder="Nome da cidade">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">Estado *</label>
+                        <select id="state" name="state" required>
+                            <option value="">Selecione o estado</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observations">Observações</label>
+                        <textarea id="observations" name="observations" rows="3" placeholder="Alguma observação sobre o pedido? (opcional)"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeCheckout()">Voltar</button>
+                        <button type="submit" class="btn-primary">Confirmar Pedido</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        window.emailJsReady = false;
+        const tentarInicializar = function() {
+            if (typeof emailjs !== 'undefined') {
+                try {
+                    emailjs.init("QJEsDhXmiLiWFglo_");
+                    window.emailJsReady = true;
+                    console.log('EMAILJS PRONTO');
+                } catch (error) {
+                    console.error('Erro ao inicializar EmailJS:', error);
+                }
+            } else {
+                setTimeout(tentarInicializar, 100);
+            }
+        };
+        
+
+        tentarInicializar();
+    </script>
+    <!-- Firebase Auth -->
+    <!--<script type="module" src="js/auth.js"></script>-->
+
+<!-- Seu script -->
+    <script src="script.js"></script>
+</body>
+</html>
