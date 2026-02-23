@@ -9,17 +9,6 @@ const EMAILJS_CONFIG = {
 let products = [];
 let cart = [];
 
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('✅ DOM carregado');
-    
-    // Carrega produtos do MongoDB
-    await carregarProdutosMongoDB();
-    
-    // Resto da lógica de máscaras e eventos
-    configurarMascaras();
-    configurarFormulario();
-});
-
 async function carregarProdutosMongoDB(categoria = 'todos') {
     try {
         console.log('Buscando produtos do MongoDB...');
@@ -922,6 +911,11 @@ function mostrarModalConfirmacaoWhatsApp(urlWhatsApp, nomeCliente) {
     });
 }
 
+document.addEventListener('DOMContentLoaded', async function() {
+    await carregarProdutosMongoDB();
+    configurarMascaras();
+    configurarFormulario();
+});
 
 function configurarMascaras() {
     const cepInput = document.getElementById('cep');
