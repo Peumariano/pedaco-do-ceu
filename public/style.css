@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Grandstander:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Galada&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 html {
     scroll-behavior: smooth;
@@ -128,9 +129,9 @@ header .container {
 
 .main-title {
     color: #4A2C2A;
-    font-family: "Grandstander", cursive;
+    font-family: "Outfit", sans-serif;
     font-weight: 800;
-    font-size: 4rem;
+    font-size: 5rem;
     line-height: 1.1;
     margin-bottom: 16px;
 }
@@ -255,7 +256,7 @@ header .container {
 
 .main-title2 {
     color: #fffdf9;
-    font-family: "Grandstander", cursive;
+    font-family: "Outfit", sans-serif;
     font-weight: 800;
     font-size: 4rem;
     line-height: 1.1;
