@@ -1,5 +1,4 @@
 const WHATSAPP_LOJA = "11991084308";
-
 const EMAILJS_CONFIG = {
     publicKey: "QJEsDhXmiLiWFglo_",
     serviceId: "service_6wpm9za",

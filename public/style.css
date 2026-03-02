@@ -2,6 +2,301 @@
 @import url('https://fonts.googleapis.com/css2?family=Galada&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
+/* ================================================
+   LOADING SCREEN
+   Adicione este CSS no TOPO do seu style.css
+   ================================================ */
+
+/* Container do Loading - Tela cheia */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #FBF7F4 0%, #F5EDE5 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Classe para esconder o loading */
+#loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Logo ou Texto (opcional) */
+.loading-logo {
+    font-family: "Galada", cursive;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: var(--color-chocolate-dark, #4A2C2A);
+    margin-bottom: 3rem;
+    letter-spacing: -0.02em;
+    text-align: center;
+    animation: fadeInDown 0.6s ease;
+}
+
+/* Container do Typing Indicator */
+.typing-indicator {
+    position: relative;
+    width: 80px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Círculos (bolinhas) */
+.typing-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--color-chocolate-dark, #4A2C2A);
+    animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+/* Delay para cada bolinha */
+.typing-circle:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.typing-circle:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-circle:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Sombras das bolinhas */
+.typing-shadow {
+    position: absolute;
+    bottom: -8px;
+    width: 12px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: rgba(74, 44, 42, 0.2);
+    filter: blur(1px);
+    animation: typing-shadow 1.4s infinite ease-in-out;
+}
+
+.typing-shadow:nth-child(1) {
+    left: 0;
+    animation-delay: 0s;
+}
+
+.typing-shadow:nth-child(2) {
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: 0.2s;
+}
+
+.typing-shadow:nth-child(3) {
+    right: 0;
+    animation-delay: 0.4s;
+}
+
+/* Texto de carregamento (opcional) */
+.loading-text {
+    margin-top: 2rem;
+    font-family: var(--font-body, 'Space Grotesk', sans-serif);
+    font-size: 0.9rem;
+    color: var(--color-chocolate-medium, #6D4C41);
+    letter-spacing: 0.05em;
+    animation: pulse 2s infinite;
+}
+
+/* ================================================
+   ANIMAÇÕES
+   ================================================ */
+
+/* Animação de bounce das bolinhas */
+@keyframes typing-bounce {
+    0%, 60%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    30% {
+        transform: translateY(-20px) scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+/* Animação das sombras */
+@keyframes typing-shadow {
+    0%, 60%, 100% {
+        transform: scale(1);
+        opacity: 0.2;
+    }
+    30% {
+        transform: scale(0.5);
+        opacity: 0.1;
+    }
+}
+
+/* Fade in do logo */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pulse do texto */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ================================================
+   RESPONSIVO
+   ================================================ */
+
+@media (max-width: 768px) {
+    .loading-logo {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+    }
+
+    .typing-indicator {
+        width: 60px;
+        height: 16px;
+        gap: 8px;
+    }
+
+    .typing-circle {
+        width: 10px;
+        height: 10px;
+    }
+
+    .typing-shadow {
+        width: 10px;
+        height: 3px;
+    }
+
+    .loading-text {
+        font-size: 0.8rem;
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .loading-logo {
+        font-size: 1.2rem;
+    }
+
+    .typing-indicator {
+        width: 50px;
+        gap: 6px;
+    }
+
+    .typing-circle {
+        width: 8px;
+        height: 8px;
+    }
+
+    .typing-shadow {
+        width: 8px;
+        height: 2px;
+    }
+}
+
+/* ================================================
+   PREVENIR SCROLL DURANTE LOADING
+   ================================================ */
+
+body.loading {
+    overflow: hidden;
+    height: 100vh;
+}
+
+@keyframes typing-circle7124 {
+  0% {
+    top: 20px;
+    height: 5px;
+    border-radius: 50px 50px 25px 25px;
+    transform: scaleX(1.7);
+  }
+
+  40% {
+    height: 8px;
+    border-radius: 50%;
+    transform: scaleX(1);
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+.typing-circle:nth-child(2) {
+  left: 45%;
+  animation-delay: 0.2s;
+}
+
+.typing-circle:nth-child(3) {
+  left: auto;
+  right: 15%;
+  animation-delay: 0.3s;
+}
+
+.typing-shadow {
+  width: 5px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 30px;
+  transform-origin: 50%;
+  z-index: 3;
+  left: 15%;
+  filter: blur(1px);
+  animation: typing-shadow046 0.5s alternate infinite ease;
+}
+
+@keyframes typing-shadow046 {
+  0% {
+    transform: scaleX(1.5);
+  }
+
+  40% {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scaleX(0.2);
+    opacity: 0.4;
+  }
+}
+
+.typing-shadow:nth-child(4) {
+  left: 45%;
+  animation-delay: 0.2s;
+}
+
+.typing-shadow:nth-child(5) {
+  left: auto;
+  right: 15%;
+  animation-delay: 0.3s;
+}
+
 html {
     scroll-behavior: smooth;
 }

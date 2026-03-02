@@ -8,7 +8,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header -->
+
+
+    <div id="loading-screen">
+    <div class="loading-logo">
+        Pedaço do Céu
+    </div>
+    
+    <div class="typing-indicator">
+        <div class="typing-circle"></div>
+        <div class="typing-circle"></div>
+        <div class="typing-circle"></div>
+        <div class="typing-shadow"></div>
+        <div class="typing-shadow"></div>
+        <div class="typing-shadow"></div>
+    </div>
+    
+    <div class="loading-text">
+        carregando brigadeiros
+    </div>
+</div>
     <header>
         <div class="container">
             <a href="index.html" class="logo">
@@ -245,6 +264,48 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <script>
+
+        // ================================================
+// LOADING SCREEN CONTROLLER
+// Adicione este script no FINAL do index.html, antes de </body>
+// ================================================
+
+(function() {
+    'use strict';
+    document.body.classList.add('loading');
+
+    function hideLoading() {
+        const loadingScreen = document.getElementById('loading-screen');
+        
+        if (loadingScreen) {
+            loadingScreen.classList.add('hidden');
+            
+            document.body.classList.remove('loading');
+            
+            setTimeout(() => {
+                loadingScreen.remove();
+            }, 500);
+            
+            console.log('Loading completo!');
+        }
+    }
+
+    window.addEventListener('load', function() {
+        setTimeout(hideLoading, 1500);
+    });
+
+    setTimeout(function() {
+        if (document.getElementById('loading-screen')) {
+            hideLoading();
+        }
+    }, 10000);
+
+    if (document.readyState === 'complete') {
+        setTimeout(hideLoading, 1500);
+    }
+
+})();
+
         window.emailJsReady = false;
         const tentarInicializar = function() {
             if (typeof emailjs !== 'undefined') {
