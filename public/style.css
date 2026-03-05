@@ -558,7 +558,7 @@ header .container {
 
 .main-cta2 {
     display: inline-block;
-    background: #fffdf9;
+    background: #eed6c4;
     color: #4A2C2A;
     padding: 14px 40px;
     border-radius: 30px;
@@ -599,7 +599,7 @@ header .container {
 }
 
 .filters {
-    background: #fff;
+    background: #eed6c4;
     padding: 50px 0;
     margin: 0;
 }
@@ -615,7 +615,7 @@ header .container {
     font-family: "Grandstander", cursive;    
     padding: 14px 40px;
     border: 1px solid #432b2a;
-    background: #fffdf9;
+    background: #eed6c4;
     color: #4A2C2A;
     border-radius: 30px;
     cursor: pointer;
@@ -626,13 +626,13 @@ header .container {
 
 .filter-btn:hover {
     background-color: #5a3c3c;
-    color: #fffdf9;
+    color: #eed6c4;
     border: 1px solid #fff;
 }
 
 .filter-btn.active {
     background: #5a3c3c;
-    color: #fffdf9;
+    color: #eed6c4;
     border: 1px solid #fff;
 }
 
@@ -649,7 +649,7 @@ header .container {
 
 .product-card {
     border-radius: 18px;
-    background-color: #fff4de;
+    background-color: #f6a471;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
@@ -660,7 +660,7 @@ header .container {
     width: 100%;
     height: 240px;
     object-fit: cover;
-    background: linear-gradient(135deg, #f8e1d4 0%, #fffdf9 100%);
+    background: linear-gradient(135deg, #f6a471 0%, #f3a473 100%);
     display: flex;
     align-items: center;
     justify-content: center;
