@@ -660,7 +660,7 @@ header .container {
     width: 100%;
     height: 240px;
     object-fit: cover;
-    background: linear-gradient(135deg, #f6a471 0%, #eed6c4 100%);
+    background: linear-gradient(135deg, #fff6e8 0%, #eed6c4 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -851,7 +851,7 @@ header .container {
 .cart-footer {
     padding: 20px;
     border-top: 2px solid #eee;
-    background: #f9f9f9;
+    background: #eed6c4;
 }
 
 .cart-total {
