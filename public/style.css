@@ -312,7 +312,7 @@ body {
 
 /* Header */
 header {
-    background: #fffdf9;
+    background: #eed6c4;
     color:#4A2C2A;
     padding: 20px 0;
     box-shadow: 0 4px 6px rgba(77, 47, 47, 0.1);
@@ -390,7 +390,7 @@ header .container {
 }
 
 .main-section {
-    background: #fff;
+    background: #eed6c4;
     position: relative;
     overflow: hidden;
     padding: 80px 100px 10px 100px;
