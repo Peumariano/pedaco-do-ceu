@@ -14,7 +14,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(135deg, #eed6c4 0%, #f6a471 100%);
+    background: #eed6c4;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -300,7 +300,7 @@ html {
 
 body {    
     font-family: "Grandstander", cursive;    
-    background: linear-gradient(135deg, #eed6c4 0%, #f6a471 100%);
+    background: #eed6c4;
     min-height: 100vh;
 }
 
