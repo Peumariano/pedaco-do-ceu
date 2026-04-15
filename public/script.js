@@ -364,7 +364,7 @@ function escolherMetodoPagamento() {
                     justify-content: center;
                     gap: 10px;
                 ">
-                    Pix (Pagamento Instantâneo)
+                    Pix (Frete pelo WhatsApp)
                 </button>
 
                 <button class="btn-dinheiro" style="
@@ -383,7 +383,7 @@ function escolherMetodoPagamento() {
                     justify-content: center;
                     gap: 10px;
                 ">
-                    Dinheiro ou Cartão na entrega
+                    A combinar (Frete pelo WhatsApp)
                 </button>
             </div>
         `;
