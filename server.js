@@ -282,7 +282,7 @@ app.post('/api/admin/seed', authMiddleware, adminMiddleware, async (req, res) =>
             { name: "Brigadeiro de Oreo", category: "diferente", description: "Brigadeiro branco com pedaços de Oreo", price: 5.50, image: "assets/brigadeiro-oreo.png" },
             { name: "Brigadeiro Casadinho", category: "diferente", description: "Cremoso brigadeiro preto e ninho", price: 3.50, image: "assets/brigadeiro-casadinho.png" },
             { name: "Brigadeiro M&M", category: "diferente", description: "Brigadeiro cremoso com sabor M&M", price: 3.50, image: "assets/brigadeiro-M&M.png" },
-            { name: "Caixa de Brigadeiro", category: "Caixas", description: "Brigadeiros personalizados", price: 14.00, image: "assets/caixa-brigadeiro.png" }
+            { name: "Caixa de Brigadeiro", category: "Caixas", description: "Brigadeiros personalizados", price: 27.00, image: "assets/caixa-brigadeiro.png" }
         ];
 
         await Product.deleteMany({});
