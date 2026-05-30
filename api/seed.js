@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
             { name: "Brigadeiro Casadinho", category: "diferente", description: "Cremoso brigadeiro preto e ninho", price: 3.50, image: "assets/brigadeiro-casadinho.png" },
             { name: "Brigadeiro M&M", category: "diferente", description: "Brigadeiro tradicional com M&M", price: 3.50, image: "assets/brigadeiro-M&M.png" },
             { name: "Caixa de Brigadeiro", category: "Caixas", description: "Brigadeiros personalizados", price: 42.00, image: "assets/caixa-brigadeiro.png" },
-            { name: "Caixa com 4 brigadeiros", category: "Caixas", description: "Caixa com 4 brigadeiros a sua escolha", price: 14.00, image: "assets/caixa-brigadeiro2.png" },
+            { name: "Caixa com 4 brigadeiros", category: "Caixas", description: "Caixa com 4 brigadeiros a sua escolha", price: 27.00, image: "assets/caixa-brigadeiro2.png" },
             { name: "Coxinha de Morango", category: "diferente", description: "Coxinha de morango em formato de coração", price: 15.00, image: "assets/coxinha-morango.png" },
             { name: "Coxinha de Morango", category: "diferente", description: "Coxinha de morango", price: 12.00, image: "assets/coxinha-morango2.png" },
             { name: "Coxinha de Morango de Ninho", category: "diferente", description: "Coxinha de morango em formato de coração com sabor ninho", price: 15.00, image: "assets/coxinha-morango-ninho.png" },
